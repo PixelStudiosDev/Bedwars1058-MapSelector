@@ -21,18 +21,16 @@ public class PlaceholdersUtil extends PlaceholderExpansion {
 
 	@Override
 	public @NotNull String getVersion() {
-		return Main.plugin.getDescription().getVersion();
+		return Main.getPlugin().getDescription().getVersion();
 	}
 
 	@Override
 	public String onRequest(OfflinePlayer player, String params) {
 		if(params.contains("map_joins_")) {
-			String map = params.replace("map_joins_", "");
-			return String.valueOf(Yaml.getMapJoins(Bukkit.getPlayer(player.getUniqueId()), map));
+			return String.valueOf(Yaml.getMapJoins(Bukkit.getPlayer(player.getUniqueId()), params.replace("map_joins_", "")));
 		}
 		if(params.contains("is_map_favorite_")) {
-			String map = params.replace("is_map_favorite_", "");
-			return String.valueOf(Yaml.isFavorite(Bukkit.getPlayer(player.getUniqueId()), map));
+			return String.valueOf(Yaml.isFavorite(Bukkit.getPlayer(player.getUniqueId()), params.replace("is_map_favorite_", "")));
 		}
 		if(params.contains("get_selections_type")) {
 			return String.valueOf(SelectorUtil.getSelectionsType(Bukkit.getPlayer(player.getUniqueId())));

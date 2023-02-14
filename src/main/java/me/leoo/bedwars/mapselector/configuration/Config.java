@@ -1,12 +1,13 @@
 package me.leoo.bedwars.mapselector.configuration;
 
 import me.leoo.bedwars.mapselector.Main;
-import me.leoo.bedwars.mapselector.utils.SelectorUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class Config {
@@ -14,42 +15,52 @@ public class Config {
 	public static ConfigHandler config;
 
 	public static void setupConfig() {
-		String getType = Main.bungee ? "BedWarsProxy" : "BedWars1058";
-		(new File("plugins/" + getType + "/Addons/MapSelector")).mkdirs();
-		config = new ConfigHandler(Main.plugin, "config", "plugins/" + getType + "/Addons/MapSelector");
+		String mode = Main.getMode().getName();
+		File file = new File("plugins/" + mode + "/Addons/MapSelector");
+
+		if (!file.exists()) {
+			if (file.mkdir()) {
+				System.out.println("[BedWars1058-MapSelector] Successfully created the plugin's folder");
+			} else {
+				System.out.println("[BedWars1058-MapSelector] Error while creating the plugin's folder");
+			}
+		}
+
+		config = new ConfigHandler(Main.getPlugin(), "config", "plugins/" + mode + "/Addons/MapSelector");
 		YamlConfiguration yml = config.getYml();
 
 		//header
-		yml.options().header(Main.plugin.getDescription().getName() + " v" + Main.plugin.getDescription().getVersion() + " made by " + Main.plugin.getDescription().getAuthors() + ".\n" +
-			"Dependencies: " + Main.plugin.getDescription().getDepend() + ".\n" +
-			"SoftDependencies: " + Main.plugin.getDescription().getSoftDepend() + ".\n" +
+		yml.options().header(Main.getPlugin().getDescription().getName() + " v" + Main.getPlugin().getDescription().getVersion() + " made by " + Main.getPlugin().getDescription().getAuthors() + ".\n" +
+			"Dependencies: " + Main.getPlugin().getDescription().getDepend() + ".\n" +
+			"SoftDependencies: " + Main.getPlugin().getDescription().getSoftDepend() + ".\n" +
 			"See the wiki: https://leo18bernese.gitbook.io/bedwars1058-mapselector/\n" +
 			"Join my discord for support: https://discord.gg/dtwanz4GQg\n" +
 			"Cache storage available options: MySQL / SQLite.\n");
 
-		//options
-		yml.addDefault("data-save", "MySQL");
-		yml.addDefault("current-date", SelectorUtil.getDate());
+		//settings
+		yml.addDefault("map_selector.debug", Boolean.FALSE);
+		yml.addDefault("map_selector.storage", "SQLite");
+		yml.addDefault("map_selector.last-date", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
 		//default items
 		addSelectorItem(yml, "join_random", true, 1, false, "default_action", 12, Material.BED, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aBed Wars ({group_name})", Arrays.asList("&7Play Bed Wars {group_name}.", "", "&eClick to play!"), false);
-		addSelectorItem(yml, "map_selector", true, 1, false, "default_action",14, Material.SIGN, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&aMap Selector ({group_name})", Arrays.asList("&7Pick which map you want to play", "&7from a list of available games.", "", "&eClick to browse!"), false);
-		addSelectorItem(yml, "close", true, 1, false, "default_action",31, Material.BARRIER, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&cClose", Arrays.asList(), false);
-		addSelectorItem(yml, "rejoin", true, 1, false, "default_action",35, Material.ENDER_PEARL, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&cClick here to rejoin!", Arrays.asList("&7Click here to rejoin your game", "&7if you have been disconnected", "&7from it."), false);
+		addSelectorItem(yml, "map_selector", true, 1, false, "default_action", 14, Material.SIGN, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aMap Selector ({group_name})", Arrays.asList("&7Pick which map you want to play", "&7from a list of available games.", "", "&eClick to browse!"), false);
+		addSelectorItem(yml, "close", true, 1, false, "default_action", 31, Material.BARRIER, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&cClose", Collections.emptyList(), false);
+		addSelectorItem(yml, "rejoin", true, 1, false, "default_action", 35, Material.ENDER_PEARL, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&cClick here to rejoin!", Arrays.asList("&7Click here to rejoin your game", "&7if you have been disconnected", "&7from it."), false);
 
-		addSelectorItem(yml, "map", true, 1, false, "default_action",0, Material.PAPER, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&a{map_name}", Arrays.asList("&8{group_name}", "", "&7Available Games: &a{available_games}", "&7Times Joined: &a{times_joined}", "&7Map Selections: &a{selections_type}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!"), false);
-		addSelectorItem(yml, "map_favorite", true, 1, false, "default_action",0, Material.EMPTY_MAP, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&b✫ &a{map_name}", Arrays.asList("&8{group_name}", "", "&7Available Games: &a{available_games}", "&7Times Joined: &a{times_joined}", "&7Map Selections: &a{selections_type}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!"), false);
-		addSelectorItem(yml, "map_no_permissions_no_uses", true, 1, false, "default_action",0, Material.SULPHUR, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&a{map_name}", Arrays.asList("&8{group_name}", "", "&7Available Games: &a{available_games}", "&7Times Joined: &a{times_joined}", "&7Map Selections: &a{selections_type}", "", "&c✘ You don't have the required rank", "&cor you have reached", "&cthe daily map selections limit!"), false);
+		addSelectorItem(yml, "map", true, 1, false, "default_action", 0, Material.PAPER, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&a{map_name}", Arrays.asList("&8{group_name}", "", "&7Available Games: &a{available_games}", "&7Times Joined: &a{times_joined}", "&7Map Selections: &a{selections_type}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!"), false);
+		addSelectorItem(yml, "map_favorite", true, 1, false, "default_action", 0, Material.EMPTY_MAP, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&b✫ &a{map_name}", Arrays.asList("&8{group_name}", "", "&7Available Games: &a{available_games}", "&7Times Joined: &a{times_joined}", "&7Map Selections: &a{selections_type}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!"), false);
+		addSelectorItem(yml, "map_no_permissions_no_uses", true, 1, false, "default_action", 0, Material.SULPHUR, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&a{map_name}", Arrays.asList("&8{group_name}", "", "&7Available Games: &a{available_games}", "&7Times Joined: &a{times_joined}", "&7Map Selections: &a{selections_type}", "", "&c✘ You don't have the required rank", "&cor you have reached", "&cthe daily map selections limit!"), false);
 
-		addSelectorItem(yml, "random_map", true, 1, false, "default_action",39, Material.FIREWORK, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aRandom Map", Arrays.asList("&8{group_name}", "", "&7Map selections: &a{selections_type}", "", "&a▸ Click to Play"), false);
-		addSelectorItem(yml, "random_favourite", true, 1, false, "default_action",41, Material.DIAMOND, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aRandom Favourite", Arrays.asList("&8{group_name}", "", "&7Map selections: &a{selections_type}", "", "&a▸ Click to Play"), false);
-		addSelectorItem(yml, "back", true, 1, false, "default_action",49, Material.ARROW, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&aBack", Arrays.asList(), false);
-		addSelectorItem(yml, "next_page", true, 1, false, "default_action",26, Material.ARROW, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&aNext Page", Arrays.asList("&ePage {next_page}"), false);
-		addSelectorItem(yml, "previous_page", true, 1, false, "default_action",18, Material.ARROW, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&aPrevious Page", Arrays.asList("&ePage {previous_page}"), false);
+		addSelectorItem(yml, "random_map", true, 1, false, "default_action", 39, Material.FIREWORK, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aRandom Map", Arrays.asList("&8{group_name}", "", "&7Map selections: &a{selections_type}", "", "&a▸ Click to Play"), false);
+		addSelectorItem(yml, "random_favourite", true, 1, false, "default_action", 41, Material.DIAMOND, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aRandom Favourite", Arrays.asList("&8{group_name}", "", "&7Map selections: &a{selections_type}", "", "&a▸ Click to Play"), false);
+		addSelectorItem(yml, "back", true, 1, false, "default_action", 49, Material.ARROW, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aBack", Collections.emptyList(), false);
+		addSelectorItem(yml, "next_page", true, 1, false, "default_action", 26, Material.ARROW, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aNext Page", Collections.singletonList("&ePage {next_page}"), false);
+		addSelectorItem(yml, "previous_page", true, 1, false, "default_action", 18, Material.ARROW, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aPrevious Page", Collections.singletonList("&ePage {previous_page}"), false);
 
 		//extras
-		addSelectorItem(yml, "practice", true, 1, true, "default_action",27, Material.WOOL, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&aPractice", Arrays.asList("&7Improve your gameplay by", "&7practicing different aspects of", "&7Bed Wars!", "", "&eClick to view modes!"), false);
-		addSelectorItem(yml, "book", true, 2, true, "default_action",53, Material.BOOK, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)","&aMap Selection", Arrays.asList("&7Each day you can choose which", "&7map you want to play 1 time.", "&7Unlock unlimited map selection!", "&7by upgrading to &bMVP&c+ &7rank", "&7on our store!", "", "&ehttps://store.hypixel.net!"), false);
+		addSelectorItem(yml, "practice", true, 1, true, "default_action", 27, Material.WOOL, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aPractice", Arrays.asList("&7Improve your gameplay by", "&7practicing different aspects of", "&7Bed Wars!", "", "&eClick to view modes!"), false);
+		addSelectorItem(yml, "book", true, 2, true, "default_action", 53, Material.BOOK, 0, "Put here the value of a head (see more on: https://bit.ly/3eF7h8l)", "&aMap Selection", Arrays.asList("&7Each day you can choose which", "&7map you want to play 1 time.", "&7Unlock unlimited map selection!", "&7by upgrading to &bMVP&c+ &7rank", "&7on our store!", "", "&ehttps://store.hypixel.net!"), false);
 
 		//other values
 		yml.addDefault("map_selector.selection.permission", "bwselector.selector");

@@ -7,175 +7,183 @@ import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.proxy.BedWarsProxy;
 import com.andrei1058.bedwars.proxy.api.ArenaStatus;
 import com.andrei1058.bedwars.proxy.api.CachedArena;
-import com.andrei1058.bedwars.proxy.api.Messages;
 import com.andrei1058.bedwars.proxy.arenamanager.ArenaManager;
-import com.andrei1058.bedwars.proxy.language.LanguageManager;
 import me.leoo.bedwars.mapselector.Main;
 import me.leoo.bedwars.mapselector.configuration.Config;
+import me.leoo.bedwars.mapselector.configuration.ConfigHandler;
 import me.leoo.bedwars.mapselector.database.Yaml;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 public class SelectorUtil {
 
-	public static String getSelectionsType(Player p){
+	private static String groupName;
+	private static final ConfigHandler config = Config.config;
+	private static final HashMap<Player, Integer> startMaps = new HashMap<>();
+	private static final HashMap<Player, Integer> page = new HashMap<>();
+
+	public static String firstLetterUpperCase(String string) {
+		if (string != null) {
+			char[] letter = string.toCharArray();
+			letter[0] = Character.toUpperCase(letter[0]);
+			return new String(letter);
+		}
+		return null;
+	}
+
+	public static String getSelectionsType(Player player) {
 		String type = String.valueOf(0);
-		//if(Config.config.getString("data-save").equalsIgnoreCase("yaml")){
-			for(String s : Config.config.getYml().getConfigurationSection("map_selector.selections_type").getKeys(false)){
-				String permission = Config.config.getString("map_selector.selections_type." + s + ".permission");
-				int daily_uses = Config.config.getInt("map_selector.selections_type." + s + ".daily_uses");
-				boolean unlimited = Config.config.getBoolean("map_selector.selections_type." + s + ".unlimited");
-				if(p.hasPermission(permission)){
-					if(unlimited){
-						type = Config.config.getString("map_selector.selection.unlimited_message");
-					}else{
-						type = String.valueOf(daily_uses);
-					}
+		for (String s : config.getYml().getConfigurationSection("map_selector.selections_type").getKeys(false)) {
+			if (player.hasPermission(config.getString("map_selector.selections_type." + s + ".permission"))) {
+				if (config.getBoolean("map_selector.selections_type." + s + ".unlimited")) {
+					type = config.getString("map_selector.selection.unlimited_message");
+				} else {
+					type = String.valueOf(config.getInt("map_selector.selections_type." + s + ".daily_uses"));
 				}
 			}
-		//}
+		}
 		return type;
 	}
 
-	public static void joinRandomGroup(Player p, String group, boolean unlimited, boolean favorite) {
-		if(Main.bungee){
-
-			if(favorite){
-				List<CachedArena> favarenas = new ArrayList<>(Yaml.getFavoritesBungee(p, group));
-				if(favarenas.isEmpty()){
-					p.sendMessage(Config.config.getString("map_selector.menu.no_favorites_maps"));
-				}else{
-					for (CachedArena a : favarenas) {
-						if (a.getCurrentPlayers() >= a.getMaxPlayers()) continue;
-						joinArena(p, a.getArenaName(), group, unlimited);
+	public static void joinRandomGroup(Player player, String group, boolean unlimited, boolean favorite) {
+		if (Main.getMode().equals(BedwarsMode.BEDWARSPROXY)) {
+			if (favorite) {
+				List<CachedArena> favoriteArenas = new ArrayList<>(Yaml.getFavoritesBungee(player, group));
+				if (favoriteArenas.isEmpty()) {
+					player.sendMessage(config.getString("map_selector.menu.no_favorites_maps"));
+				} else {
+					for (CachedArena arena : favoriteArenas) {
+						if (arena.getCurrentPlayers() >= arena.getMaxPlayers()) continue;
+						joinArena(player, arena.getArenaName(), group, unlimited);
 					}
 				}
-			}else{
+			} else {
 				List<CachedArena> arenas = new ArrayList<>();
-				ArenaManager.getArenas().forEach(a -> {
-					if(a.getArenaGroup().equalsIgnoreCase(group)){
-						if (a.getStatus().equals(ArenaStatus.WAITING) || a.getStatus().equals(ArenaStatus.STARTING)) {
-							if(a.getCurrentPlayers() < a.getMaxPlayers()) arenas.add(a);
+				ArenaManager.getArenas().forEach(arena -> {
+					if (arena.getArenaGroup().equalsIgnoreCase(group)) {
+						if (arena.getStatus().equals(ArenaStatus.WAITING) || arena.getStatus().equals(ArenaStatus.STARTING)) {
+							if (arena.getCurrentPlayers() < arena.getMaxPlayers()) arenas.add(arena);
 						}
 					}
 				});
-				if(arenas.isEmpty()){
-					p.sendMessage(Config.config.getString("map_selector.menu.no_maps"));
-				}else{
-					Collections.sort(arenas, (a1, a2) -> {
-						if (a1.getCurrentPlayers() > a2.getCurrentPlayers()) return -1;
-						if (a1.getCurrentPlayers() > a2.getCurrentPlayers()) return 1;
-						return 0;
-					});
-					joinArena(p, arenas.get(0).getArenaName(), group, unlimited);
+				if (arenas.isEmpty()) {
+					player.sendMessage(config.getString("map_selector.menu.no_maps"));
+				} else {
+					arenas.sort((a1, a2) -> Integer.compare(a2.getCurrentPlayers(), a1.getCurrentPlayers()));
+					joinArena(player, arenas.get(0).getArenaName(), group, unlimited);
 				}
 			}
-
-		}else{
-
-			if(favorite){
-				List<IArena> favarenas = new ArrayList<>(Yaml.getFavorites(p, group));
-				if(favarenas.isEmpty()){
-					p.sendMessage(Config.config.getString("map_selector.menu.no_favorites_maps"));
-				}else{
-					for (IArena a : favarenas) {
-						if (a.getPlayers().size() >= a.getMaxPlayers()) continue;
-						joinArena(p, a.getArenaName(), group, unlimited);
+		} else {
+			if (favorite) {
+				List<IArena> favoriteArenas = new ArrayList<>(Yaml.getFavorites(player, group));
+				if (favoriteArenas.isEmpty()) {
+					player.sendMessage(config.getString("map_selector.menu.no_favorites_maps"));
+				} else {
+					for (IArena arena : favoriteArenas) {
+						if (arena.getPlayers().size() >= arena.getMaxPlayers()) continue;
+						joinArena(player, arena.getArenaName(), group, unlimited);
 					}
 				}
-			}else{
+			} else {
 				List<IArena> arenas = new ArrayList<>();
-				Arena.getArenas().forEach(a -> {
-					if(a.getGroup().equalsIgnoreCase(group)){
-						if (a.getStatus().equals(GameState.waiting) || a.getStatus().equals(GameState.starting)) {
-							if(a.getPlayers().size() < a.getMaxPlayers()) arenas.add(a);
+				Arena.getArenas().forEach(arena -> {
+					if (arena.getGroup().equalsIgnoreCase(group)) {
+						if (arena.getStatus().equals(GameState.waiting) || arena.getStatus().equals(GameState.starting)) {
+							if (arena.getPlayers().size() < arena.getMaxPlayers()) arenas.add(arena);
 						}
 					}
 				});
-				if(arenas.isEmpty()){
-					p.sendMessage(Config.config.getString("map_selector.menu.no_maps"));
-				}else{
-					Collections.sort(arenas, (a1, a2) -> {
-						if (a1.getPlayers().size() > a2.getPlayers().size()) return -1;
-						if (a1.getPlayers().size() > a2.getPlayers().size()) return 1;
-						return 0;
-					});
-					joinArena(p, arenas.get(0).getArenaName(), group, unlimited);
+				if (arenas.isEmpty()) {
+					player.sendMessage(config.getString("map_selector.menu.no_maps"));
+				} else {
+					arenas.sort((a1, a2) -> Integer.compare(a2.getPlayers().size(), a1.getPlayers().size()));
+					joinArena(player, arenas.get(0).getArenaName(), group, unlimited);
 				}
 			}
 		}
 	}
 
-	public static void joinArena(Player p, String map, String group, boolean unlimited) {
-		if(Main.bungee){
-			ArrayList<CachedArena> arenas = new ArrayList<>();
-			ArenaManager.getArenas().forEach(a -> {
-				if (a.getArenaName().equals(map)) {
-					if(a.getArenaGroup().equalsIgnoreCase(group)){
-						if (a.getStatus().equals(ArenaStatus.WAITING) || a.getStatus().equals(ArenaStatus.STARTING)) {
-							arenas.add(a);
-						}
-					}
-
+	public static void joinArena(Player player, String name, String group, boolean unlimited) {
+		if (Main.getMode().equals(BedwarsMode.BEDWARSPROXY)) {
+			List<CachedArena> arenas = new ArrayList<>();
+			ArenaManager.getArenas().forEach(arena -> {
+				if (arena.getArenaName().equals(name) && arena.getArenaGroup().equalsIgnoreCase(group) && arena.getStatus().equals(ArenaStatus.WAITING) || arena.getStatus().equals(ArenaStatus.STARTING)) {
+					arenas.add(arena);
 				}
 			});
-			if(arenas.isEmpty())
-				return;
-			if(BedWarsProxy.getParty().hasParty(p.getUniqueId())){
-				if(BedWarsProxy.getParty().getMembers(p.getUniqueId()).size() > 1){
-					if(!BedWarsProxy.getParty().isOwner(p.getUniqueId())){
-						p.sendMessage(Config.config.getString("map_selector.menu.not_party_leader"));
-						return;
-					}
-					for(UUID uuid : BedWarsProxy.getParty().getMembers(p.getUniqueId())){
-						Player pl = Bukkit.getPlayer(uuid);
-						arenas.get(0).addPlayer(pl, pl.getName());
-					}
-				}else{
-					arenas.get(0).addPlayer(p, p.getName());
-				}
-			}else{
-				arenas.get(0).addPlayer(p, p.getName());
-			}
-		}else{
-			if(BedWars.getParty().hasParty(p)){
-				if(BedWars.getParty().getMembers(p).size() > 1){
-					if(!BedWars.getParty().isOwner(p)){
-						p.sendMessage(Config.config.getString("map_selector.menu.not_party_leader"));
-						return;
-					}
-					for(Player pl : BedWars.getParty().getMembers(p)){
-						Arena.getArenaByName(map).addPlayer(pl, false);
-					}
-				}else{
-					Arena.getArenaByName(map).addPlayer(p, false);
-				}
-			}else{
-				Arena.getArenaByName(map).addPlayer(p, false);
-			}
-		}
-		Yaml.addMapJoin(p, map);
-		if(!unlimited) {
-			Main.database.setPlayerUses(p.getUniqueId(), Main.database.getPlayerUses(p.getUniqueId()) + 1);
-		}
-	}
 
-	public static int getDate(){
-		Calendar calendar = Calendar.getInstance();
-		return calendar.get(Calendar.DAY_OF_MONTH);
+			if (arenas.isEmpty()) return;
+
+			if (BedWarsProxy.getParty().hasParty(player.getUniqueId()) && BedWarsProxy.getParty().getMembers(player.getUniqueId()).size() > 1) {
+				if (!BedWarsProxy.getParty().isOwner(player.getUniqueId())) {
+					player.sendMessage(config.getString("map_selector.menu.not_party_leader"));
+					return;
+				}
+				BedWarsProxy.getParty().getMembers(player.getUniqueId()).forEach(partyPlayerUuid -> arenas.get(0).addPlayer(Bukkit.getPlayer(partyPlayerUuid), Bukkit.getPlayer(partyPlayerUuid).getName()));
+			} else {
+				arenas.get(0).addPlayer(player, player.getName());
+			}
+		} else {
+			if (BedWars.getParty().hasParty(player) && BedWars.getParty().getMembers(player).size() > 1) {
+				if (!BedWars.getParty().isOwner(player)) {
+					player.sendMessage(config.getString("map_selector.menu.not_party_leader"));
+					return;
+				}
+				BedWars.getParty().getMembers(player).forEach(partyPlayer -> Arena.getArenaByName(name).addPlayer(partyPlayer, false));
+			} else {
+				Arena.getArenaByName(name).addPlayer(player, false);
+			}
+		}
+
+		Yaml.addMapJoin(player, name);
+
+		if (!unlimited) {
+			Main.getMapSelectorDatabase().setPlayerUses(player.getUniqueId(), Main.getMapSelectorDatabase().getPlayerUses(player.getUniqueId()) + 1);
+		}
 	}
 
 	public static boolean isOldDate() {
-		Calendar calendar = Calendar.getInstance();
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		if(day == Config.config.getInt("current-date")){
-			return  false;
-		}else {
-			Config.config.set("current-date", day);
+		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+		if (day == config.getInt("map_selector.last-date")) {
+			return false;
+		} else {
+			config.getYml().set("current-date", day);
 			return true;
 		}
+	}
+
+	public static void setGroupName(String groupName) {
+		SelectorUtil.groupName = groupName;
+	}
+
+	public static String getGroupName() {
+		return groupName;
+	}
+
+	public static HashMap<Player, Integer> getPage() {
+		return page;
+	}
+
+	public static int getCurrentPage(Player p) {
+		if (page.containsKey(p)) {
+			return page.get(p);
+		}
+		return -1;
+	}
+
+	public static HashMap<Player, Integer> getStartMaps() {
+		return startMaps;
+	}
+
+	public static int getStartMaps(Player p) {
+		if (startMaps.containsKey(p)) {
+			return startMaps.get(p);
+		}
+		return -1;
 	}
 }

@@ -1,17 +1,20 @@
 name: BedWars1058-MapSelector
-version: 1.3.0-BETA-1
+version: 1.3.1
 author: itz_leoo
 main: me.leoo.bedwars.mapselector.Main
-description: BedWars1058 Map Selector Addon
-softdepend: [BedWarsProxy, BedWars1058, PlaceholderAPI]
+description: BedWars1058/BedwarsProxy Map Selector Addon
+softdepend: [ BedWarsProxy, BedWars1058, PlaceholderAPI ]
 permissions:
     bwselector.reload:
         default: op
         description: Permissions required to run the command /bwselector reload
 commands:
-    bwmenu:
-        description: Open the first gui of the selector.
-    bwmap:
-        description: Open the second gui of the selector.
-    bwselector:
-        description: Reload the config files of the plugin.
+    bedwarsmenu:
+        description: Open the first gui of the selector
+        aliases: bwmenu
+    bedwarsmap:
+        description: Open the second gui of the selector
+        aliases: bwmap
+    bedwarsselector:
+        description: Reload the config files of the plugin
+        aliases: bwselector

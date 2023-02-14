@@ -7,7 +7,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -15,12 +14,14 @@ import java.util.stream.Collectors;
 public class ConfigHandler {
 	private YamlConfiguration yml;
 	private File config;
+	private String name;
 
 	public ConfigHandler(Plugin plugin, String name, String dir) {
 		File d = new File(dir);
 		if (!d.exists() && !d.mkdirs()) {
 			plugin.getLogger().log(Level.SEVERE, "Could not create " + d.getPath());
 		} else {
+			this.name = name;
 			this.config = new File(dir, name + ".yml");
 			if (!this.config.exists()) {
 				plugin.getLogger().log(Level.INFO, "Creating " + this.config.getPath());
@@ -44,11 +45,6 @@ public class ConfigHandler {
 		this.yml = YamlConfiguration.loadConfiguration(this.config);
 	}
 
-	public void set(String path, Object value) {
-		this.yml.set(path, value);
-		this.save();
-	}
-
 	public YamlConfiguration getYml() {
 		return this.yml;
 	}
@@ -59,15 +55,11 @@ public class ConfigHandler {
 		} catch (IOException var2) {
 			var2.printStackTrace();
 		}
+
 	}
 
 	public List<String> getList(String path) {
-		List<String> st = this.yml.getStringList(path).stream().map((s) -> s.replace("&", "§")).collect(Collectors.toList());
-		List<String> d = new ArrayList<>();
-		for(String scd : st){
-			d.add(PlaceholderAPI.setPlaceholders(null, scd));
-		}
-		return d;
+		return this.yml.getStringList(path).stream().map((s) -> PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', s))).collect(Collectors.toList());
 	}
 
 	public boolean getBoolean(String path) {
@@ -79,8 +71,11 @@ public class ConfigHandler {
 	}
 
 	public String getString(String path) {
-		String s = ChatColor.translateAlternateColorCodes('&', this.yml.getString(path));
-		s = PlaceholderAPI.setPlaceholders(null, s);
-		return s;
+		String s = this.yml.getString(path);
+		if (s == null) {
+			System.out.println("[Guilds] String with the path " + path + " not found in the config " + name);
+			return "String not found";
+		}
+		return PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', s));
 	}
 }

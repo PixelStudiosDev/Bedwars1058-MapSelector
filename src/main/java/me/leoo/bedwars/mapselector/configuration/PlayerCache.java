@@ -7,20 +7,29 @@ import java.io.File;
 
 public class PlayerCache {
 
-	public static ConfigHandler cache;
+	public static ConfigHandler config;
 
-	public static void setupCache() {
-		String getType = Main.bungee ? "BedWarsProxy" : "BedWars1058";
-		(new File("plugins/" + getType + "/Addons/MapSelector")).mkdirs();
-		cache = new ConfigHandler(Main.plugin, "cache", "plugins/" + getType + "/Addons/MapSelector");
-		YamlConfiguration yml = cache.getYml();
+	public static void setupConfig() {
+		String mode = Main.getMode().getName();
+		File file = new File("plugins/" + mode + "/Addons/MapSelector");
 
-		yml.options().header(Main.plugin.getDescription().getName() + " v" + Main.plugin.getDescription().getVersion() + " made by " + Main.plugin.getDescription().getAuthors() + ".\n" +
-			"Dependencies: " + Main.plugin.getDescription().getDepend() + ".\n" +
-			"SoftDependencies: " + Main.plugin.getDescription().getSoftDepend() + ".\n" +
+		if (!file.exists()) {
+			if (file.mkdir()) {
+				System.out.println("[BedWars1058-MapSelector] Successfully created the plugin's folder");
+			} else {
+				System.out.println("[BedWars1058-MapSelector] Error while creating the plugin's folder");
+			}
+		}
+
+		config = new ConfigHandler(Main.getPlugin(), "cache", "plugins/" + mode + "/Addons/MapSelector");
+		YamlConfiguration yml = config.getYml();
+
+		yml.options().header(Main.getPlugin().getDescription().getName() + " v" + Main.getPlugin().getDescription().getVersion() + " made by " + Main.getPlugin().getDescription().getAuthors() + ".\n" +
+			"Dependencies: " + Main.getPlugin().getDescription().getDepend() + ".\n" +
+			"SoftDependencies: " + Main.getPlugin().getDescription().getSoftDepend() + ".\n" +
 			"Join my discord for support: https://discord.gg/dtwanz4GQg\n");
 
 		yml.options().copyDefaults(true);
-		cache.save();
+		config.save();
 	}
 }
