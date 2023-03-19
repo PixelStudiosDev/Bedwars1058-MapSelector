@@ -113,7 +113,7 @@ public class ConfigManager {
     public String getString(String path) {
         String string = this.yml.getString(path);
         if (string == null) {
-            MapSelector.getPlugin("[Guilds] String with the path " + path + " not found in the config " + name);
+            MapSelector.getPlugin().getLogger().info("[Guilds] String with the path " + path + " not found in the config " + name);
             return "String not found";
         }
         return PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', string));

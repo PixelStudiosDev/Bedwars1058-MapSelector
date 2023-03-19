@@ -18,7 +18,6 @@ import java.util.*;
 public class MapSelectorMenuProxy {
 
     public static void openFirstGui(Player player, String group) {
-        SelectorUtil.setGroupName(SelectorUtil.firstLetterUpperCase(group));
         Inventory inventory = Bukkit.createInventory(null, MapSelector.getPlugin().getMainConfig().getInt("map_selector.menu.per_group_menu.slots"), MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.per_group_menu.title"));
 
         for (String extraItems : MapSelector.getPlugin().getMainConfig().getYml().getConfigurationSection("map_selector.menu.item").getKeys(false)) {
@@ -54,7 +53,6 @@ public class MapSelectorMenuProxy {
     public static void openSecondGui(Player player, String group, int startMaps, int currentpage) {
         Inventory inventory = Bukkit.createInventory(null, MapSelector.getPlugin().getMainConfig().getInt("map_selector.menu.selector.slots"), MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.selector.title"));
 
-        SelectorUtil.setGroupName(SelectorUtil.firstLetterUpperCase(group));
         SelectorUtil.getStartMaps().put(player, startMaps);
         SelectorUtil.getPage().put(player, currentpage);
 
