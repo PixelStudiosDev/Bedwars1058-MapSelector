@@ -112,3 +112,4 @@ buildNumber.properties
 
 # Common working directory
 run/!/bw1058_map_selector.iml
+!/dependencies/

@@ -6,7 +6,7 @@ import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.proxy.api.ArenaStatus;
 import com.andrei1058.bedwars.proxy.api.CachedArena;
 import com.andrei1058.bedwars.proxy.arenamanager.ArenaManager;
-import me.leoo.bedwars.mapselector.configuration.PlayerCache;
+import me.leoo.bedwars.mapselector.MapSelector;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -15,83 +15,71 @@ import java.util.List;
 
 public class Yaml {
 
-	public static void storePlayer(Player player) {
-		PlayerCache.config.getYml().set(player.getUniqueId() + ".favorite_maps", Collections.emptyList());
-		PlayerCache.config.getYml().set(player.getUniqueId() + ".per_map_times_joined", Collections.emptyList());
-	}
+    public Yaml(){}
 
-	public static boolean isStoredPlayer(Player player) {
-		return PlayerCache.config.getYml().contains(String.valueOf(player.getUniqueId()));
-	}
+    public void storePlayer(Player player) {
+        MapSelector.getPlugin().getCacheConfig().getYml().set(player.getUniqueId() + ".favorite_maps", Collections.emptyList());
+        MapSelector.getPlugin().getCacheConfig().getYml().set(player.getUniqueId() + ".per_map_times_joined", Collections.emptyList());
+    }
 
-	public static boolean isFavorite(Player p, String map) {
-		if (isStoredPlayer(p)) {
-			return PlayerCache.config.getYml().getBoolean(p.getUniqueId() + ".favorite_maps." + map);
-		} else {
-			storePlayer(p);
-		}
-		return false;
-	}
+    public boolean isStoredPlayer(Player player) {
+        return MapSelector.getPlugin().getCacheConfig().getYml().contains(String.valueOf(player.getUniqueId()));
+    }
 
-	public static void setFavorite(Player p, String map) {
-		if (!isStoredPlayer(p)) {
-			storePlayer(p);
-		}
-		PlayerCache.config.getYml().set(p.getUniqueId() + ".favorite_maps." + map, Boolean.TRUE);
-	}
+    public void checkStored(Player player){
+        if (!isStoredPlayer(player)) {
+            storePlayer(player);
+        }
+    }
 
-	public static void unsetFavorite(Player p, String map) {
-		if (!isStoredPlayer(p)) {
-			storePlayer(p);
-		}
-		PlayerCache.config.getYml().set(p.getUniqueId() + ".favorite_maps." + map, Boolean.FALSE);
-	}
+    public boolean isFavorite(Player player, String map) {
+        if (isStoredPlayer(player)) {
+            return MapSelector.getPlugin().getCacheConfig().getYml().getBoolean(player.getUniqueId() + ".favorite_maps." + map);
+        } else {
+            storePlayer(player);
+        }
+        return false;
+    }
 
-	public static List<IArena> getFavorites(Player p, String group) {
-		if (!isStoredPlayer(p)) {
-			storePlayer(p);
-		}
-		List<IArena> favoriteMaps = new ArrayList<>();
-		for (IArena a : Arena.getArenas()) {
-			if (a.getGroup().equalsIgnoreCase(group)) {
-				if (a.getStatus().equals(GameState.waiting) || a.getStatus().equals(GameState.starting)) {
-					if (PlayerCache.config.getBoolean(p.getUniqueId() + ".favorite_maps." + a.getArenaName())) {
-						favoriteMaps.add(a);
-					}
-				}
-			}
-		}
-		return favoriteMaps;
-	}
+    public void setFavorite(Player player, String map) {
+        checkStored(player);
+        MapSelector.getPlugin().getCacheConfig().getYml().set(player.getUniqueId() + ".favorite_maps." + map, Boolean.TRUE);
+    }
 
-	public static List<CachedArena> getFavoritesBungee(Player p, String group) {
-		if (!isStoredPlayer(p)) {
-			storePlayer(p);
-		}
-		List<CachedArena> favoriteMaps = new ArrayList<>();
-		for (CachedArena a : ArenaManager.getArenas()) {
-			if (a.getArenaGroup().equalsIgnoreCase(group)) {
-				if (a.getStatus().equals(ArenaStatus.WAITING) || a.getStatus().equals(ArenaStatus.STARTING)) {
-					if (PlayerCache.config.getBoolean(p.getUniqueId() + ".favorite_maps." + a.getArenaName())) {
-						favoriteMaps.add(a);
-					}
-				}
-			}
-		}
-		return favoriteMaps;
-	}
+    public void unsetFavorite(Player player, String map) {
+        checkStored(player);
+        MapSelector.getPlugin().getCacheConfig().getYml().set(player.getUniqueId() + ".favorite_maps." + map, Boolean.FALSE);
+    }
 
-	public static void addMapJoin(Player p, String map) {
-		if (!isStoredPlayer(p)) {
-			storePlayer(p);
-		}
-		PlayerCache.config.getYml().set(p.getUniqueId() + ".per_map_times_joined." + map, PlayerCache.config.getInt(p.getUniqueId() + ".per_map_times_joined." + map) + 1);
-	}
+    public List<IArena> getFavorites(Player player, String group) {
+        checkStored(player);
+        List<IArena> favoriteMaps = new ArrayList<>();
+        for (IArena arena : Arena.getArenas()) {
+            if (arena.getGroup().equalsIgnoreCase(group) && (arena.getStatus().equals(GameState.waiting) || arena.getStatus().equals(GameState.starting)) && MapSelector.getPlugin().getCacheConfig().getBoolean(player.getUniqueId() + ".favorite_maps." + arena.getArenaName())) {
+                favoriteMaps.add(arena);
+            }
+        }
+        return favoriteMaps;
+    }
 
-	public static int getMapJoins(Player p, String map) {
-		if (!isStoredPlayer(p)) {
-			storePlayer(p);
-		}
-		return PlayerCache.config.getInt(p.getUniqueId() + ".per_map_times_joined." + map);
-	}
+    public List<CachedArena> getFavoritesBungee(Player player, String group) {
+        checkStored(player);
+        List<CachedArena> favoriteMaps = new ArrayList<>();
+        for (CachedArena arena : ArenaManager.getArenas()) {
+            if (arena.getArenaGroup().equalsIgnoreCase(group) && (arena.getStatus().equals(ArenaStatus.WAITING) || arena.getStatus().equals(ArenaStatus.STARTING)) && MapSelector.getPlugin().getCacheConfig().getBoolean(player.getUniqueId() + ".favorite_maps." + arena.getArenaName())) {
+                favoriteMaps.add(arena);
+            }
+        }
+        return favoriteMaps;
+    }
+
+    public void addMapJoin(Player player, String map) {
+        checkStored(player);
+        MapSelector.getPlugin().getCacheConfig().getYml().set(player.getUniqueId() + ".per_map_times_joined." + map, MapSelector.getPlugin().getCacheConfig().getInt(player.getUniqueId() + ".per_map_times_joined." + map) + 1);
+    }
+
+    public int getMapJoins(Player player, String map) {
+        checkStored(player);
+        return MapSelector.getPlugin().getCacheConfig().getInt(player.getUniqueId() + ".per_map_times_joined." + map);
+    }
 }
