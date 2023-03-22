@@ -5,10 +5,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
+
 public class ReloadCommand extends BukkitCommand {
 
     public ReloadCommand(String name) {
         super(name);
+        setPermission("bwselector.reload");
+        setAliases(Collections.singletonList("bwselector"));
     }
 
     @Override
