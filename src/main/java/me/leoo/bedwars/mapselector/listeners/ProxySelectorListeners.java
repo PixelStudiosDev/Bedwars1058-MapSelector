@@ -55,7 +55,7 @@ public class ProxySelectorListeners implements Listener {
                     }
                 } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.map_selector.name").replace("{group_name}", tag1 == null ? "" : SelectorUtil.firstLetterUpperCase(tag1)))) {
                     if (MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.map_selector.command").equals("default_action")) {
-                        MapSelectorMenuProxy.openSecondGui(player, tag1, 0, 0);
+                        if (tag1 != null) MapSelectorMenuProxy.openSecondGui(player, tag1, 0, 0);
                     } else {
                         player.performCommand(MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.map_selector.command"));
                     }
@@ -94,7 +94,8 @@ public class ProxySelectorListeners implements Listener {
                     if (MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.map.command").equals("default_action")) {
                         if (event.isRightClick()) {
                             MapSelector.getPlugin().getYamlConfig().setFavorite(player, tag1);
-                            MapSelectorMenuProxy.openSecondGui(player, tag5, SelectorUtil.getStartMaps(player), SelectorUtil.getCurrentPage(player));
+                            if (tag5 != null)
+                                MapSelectorMenuProxy.openSecondGui(player, tag5, SelectorUtil.getStartMaps(player), SelectorUtil.getCurrentPage(player));
                         } else {
                             if (SelectorUtil.getSelectionsType(player).equals(MapSelector.getPlugin().getMainConfig().getString("map_selector.selection.unlimited_message"))) {
                                 SelectorUtil.joinArena(player, tag1, tag2, true);
@@ -116,7 +117,8 @@ public class ProxySelectorListeners implements Listener {
                     if (MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.map_favorite.command").equals("default_action")) {
                         if (event.isRightClick()) {
                             MapSelector.getPlugin().getYamlConfig().unsetFavorite(player, tag1);
-                            MapSelectorMenuProxy.openSecondGui(player, tag5, SelectorUtil.getStartMaps(player), SelectorUtil.getCurrentPage(player));
+                            if (tag5 != null)
+                                MapSelectorMenuProxy.openSecondGui(player, tag5, SelectorUtil.getStartMaps(player), SelectorUtil.getCurrentPage(player));
                         } else {
                             if (SelectorUtil.getSelectionsType(player).equals(MapSelector.getPlugin().getMainConfig().getString("map_selector.selection.unlimited_message"))) {
                                 SelectorUtil.joinArena(player, tag1, tag2, true);
@@ -180,13 +182,15 @@ public class ProxySelectorListeners implements Listener {
                     }
                 } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.next_page.name"))) {
                     if (MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.next_page.command").equals("default_action")) {
-                        MapSelectorMenuProxy.openSecondGui(player, tag5, SelectorUtil.getStartMaps(player) + MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.slots").split(",").length, SelectorUtil.getCurrentPage(player) + 1);
+                        if (tag5 != null)
+                            MapSelectorMenuProxy.openSecondGui(player, tag5, SelectorUtil.getStartMaps(player) + MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.slots").split(",").length, SelectorUtil.getCurrentPage(player) + 1);
                     } else {
                         player.performCommand(MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.next_page.command"));
                     }
                 } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.previous_page.name"))) {
                     if (MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.previous_page.command").equals("default_action")) {
-                        MapSelectorMenuProxy.openSecondGui(player, tag5, SelectorUtil.getStartMaps(player) - MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.slots").split(",").length, SelectorUtil.getCurrentPage(player) - 1);
+                        if (tag5 != null)
+                            MapSelectorMenuProxy.openSecondGui(player, tag5, SelectorUtil.getStartMaps(player) - MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.slots").split(",").length, SelectorUtil.getCurrentPage(player) - 1);
                     } else {
                         player.performCommand(MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.item.previous_page.command"));
                     }

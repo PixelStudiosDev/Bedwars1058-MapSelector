@@ -18,12 +18,14 @@ import me.leoo.bedwars.mapselector.utils.BedwarsMode;
 import me.leoo.bedwars.mapselector.utils.PlaceholdersUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandMap;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import static org.bukkit.Bukkit.getPluginManager;
@@ -57,7 +59,10 @@ public class MapSelector extends JavaPlugin {
             getPlugin().getLogger().info("Hooked into BedWarsProxy");
         }
 
-        if (bedwarsMode == null) Bukkit.getPluginManager().disablePlugin(this);
+        if (bedwarsMode == null){
+            getPlugin().getLogger().info("Bedwars1058/BedwarsProxy not found. Disabling...");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
 
         mainConfig = new MainConfig(MapSelector.getPlugin(), "config", "plugins/" + bedwarsMode.getName() + "/Addons/MapSelector");
         cacheConfig = new CacheConfig(MapSelector.getPlugin(), "cache", "plugins/" + bedwarsMode.getName() + "/Addons/MapSelector");
@@ -72,9 +77,16 @@ public class MapSelector extends JavaPlugin {
 
             registerEvents(new JoinListener());
 
-            ((CraftServer) plugin.getServer()).getCommandMap().register("bedwarsmenu", new GroupMenuCommand("bedwarsmenu"));
-            ((CraftServer) plugin.getServer()).getCommandMap().register("bedwarsmap", new SelectorMenuCommand("bedwarsmap"));
-            ((CraftServer) plugin.getServer()).getCommandMap().register("bedwarsselector", new ReloadCommand("bedwarsselector"));
+            try {
+                Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+                field.setAccessible(true);
+                CommandMap commandMap = (CommandMap) field.get(Bukkit.getServer());
+                commandMap.register("bedwarsmenu", new GroupMenuCommand("bedwarsmenu"));
+                commandMap.register("bedwarsmap", new SelectorMenuCommand("bedwarsmap"));
+                commandMap.register("bedwarsselector", new ReloadCommand("bedwarsselector"));
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
 
             getPlugin().getLogger().info("&a" + getDescription().getName() + " plugin by itz_leoo has been successfully enabled.");
         }

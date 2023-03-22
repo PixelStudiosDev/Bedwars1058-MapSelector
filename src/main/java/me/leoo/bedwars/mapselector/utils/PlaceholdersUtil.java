@@ -2,7 +2,6 @@ package me.leoo.bedwars.mapselector.utils;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.leoo.bedwars.mapselector.MapSelector;
-import me.leoo.bedwars.mapselector.database.Yaml;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;

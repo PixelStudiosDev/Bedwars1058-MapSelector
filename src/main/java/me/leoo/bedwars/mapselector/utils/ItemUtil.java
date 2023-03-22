@@ -1,9 +1,7 @@
 package me.leoo.bedwars.mapselector.utils;
 
 import com.andrei1058.bedwars.BedWars;
-import com.andrei1058.bedwars.api.server.VersionSupport;
 import com.andrei1058.bedwars.proxy.BedWarsProxy;
-import com.andrei1058.bedwars.proxy.libs.ItemStackSupport;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import me.leoo.bedwars.mapselector.MapSelector;
