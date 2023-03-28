@@ -1,5 +1,6 @@
 package me.leoo.bedwars.mapselector.configuration;
 
+import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.leoo.bedwars.mapselector.MapSelector;
 import org.bukkit.ChatColor;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+@Getter
 public class ConfigManager {
     private YamlConfiguration yml;
     private File config;
@@ -59,13 +61,6 @@ public class ConfigManager {
     }
 
     /**
-     * Get yml instance
-     */
-    public YamlConfiguration getYml() {
-        return this.yml;
-    }
-
-    /**
      * Save yml file
      */
     public void save() {
@@ -75,18 +70,6 @@ public class ConfigManager {
             var2.printStackTrace();
         }
 
-    }
-
-
-    /**
-     * Get list of strings at given path
-     *
-     * @return a list of string with colors translated
-     */
-    public List<String> getList(String path) {
-        return yml.getStringList(path).stream()
-                .map(s -> PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', s)))
-                .collect(Collectors.toList());
     }
 
     /**
@@ -103,19 +86,30 @@ public class ConfigManager {
         return yml.getInt(path);
     }
 
-    /**
-     * Get double at given path
-     */
-    public double getDouble(String path) {
-        return yml.getDouble(path);
+    public String getString(String path) {
+        if (yml.getString(path) == null) {
+            MapSelector.getPlugin().getLogger().info("String " + path + " not found in " + yml.getName());
+            return "MissingString";
+        }
+        return PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', yml.getString(path)));
     }
 
-    public String getString(String path) {
-        String string = this.yml.getString(path);
-        if (string == null) {
-            MapSelector.getPlugin().getLogger().info("[Guilds] String with the path " + path + " not found in the config " + name);
-            return "String not found";
-        }
-        return PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', string));
+    /**
+     * Get list of strings at given path
+     *
+     * @return a list of string with colors translated
+     */
+    public List<String> getList(String path) {
+        return yml.getStringList(path).stream()
+                .map(s -> PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', s)))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Set object and save file
+     */
+    public void set(String path, Object object) {
+        getYml().set(path, object);
+        save();
     }
 }
