@@ -30,29 +30,34 @@ public class MainConfig extends ConfigManager {
         yml.addDefault("map-selector.storage", "SQLite");
         yml.addDefault("map-selector.last-date", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
-        //menu settings
-        yml.addDefault("map-selector.menus.bedwars-menu.title", "&8Play Bed Wars");
-        yml.addDefault("map-selector.menus.bedwars-menu.slots", 36);
-        yml.addDefault("map-selector.menus.maps-menu.title", "&8Play Bed Wars ");
-        yml.addDefault("map-selector.menus.maps-menu.slots", 54);
-        yml.addDefault("map-selector.menus.maps-menu.maps-slots", "10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34");
-
         //commands messages
-        yml.addDefault("map-selector.messages.open.group-doesnt-exist", "&cThis group does not exist");
+        yml.addDefault("map-selector.messages.open.group-doesnt-exists", "&cThis group doesn't exists");
         yml.addDefault("map-selector.messages.open.missing", "&cUse: /bwmenu <group>");
         yml.addDefault("map-selector.messages.open.missing2", "&cUse: /bwmap <group>");
-        yml.addDefault("map-selector.messages.reload.missing", "&cUse: /bwselector reload");
         yml.addDefault("map-selector.messages.reload.success", "&aConfiguration reloaded!");
+        yml.addDefault("map-selector.messages.reset-uses.missing", "&cUse: /bwselector resetuses <player>");
+        yml.addDefault("map-selector.messages.reset-uses.not-found", "&cPlayer not found!");
+        yml.addDefault("map-selector.messages.reset-uses.success", "&aReset uses of {player}!");
+        yml.addDefault("map-selector.messages.set-uses.missing", "&cUse: /bwselector setuses <player> <uses>");
+        yml.addDefault("map-selector.messages.set-uses.not-found", "&cPlayer not found!");
+        yml.addDefault("map-selector.messages.set-uses.success", "&aSet uses of {player} to {uses}!");
 
         //error messages
-        yml.addDefault("map-selector.messages.limit-reached", "&cYou have reached the limit of map selections today");
-        yml.addDefault("map-selector.messages.no-favorites-maps", "&cYou don't have favorite maps");
-        yml.addDefault("map-selector.messages.no-maps", "&cThere are no available maps of this group");
+        yml.addDefault("map-selector.messages.limit-reached", "&cYou've reached your limit of daily map selections today!");
+        yml.addDefault("map-selector.messages.no-favorites-maps", "&cYou don't have any favorite maps");
+        yml.addDefault("map-selector.messages.no-maps", "&cThere aren't any available arenas of this group");
         yml.addDefault("map-selector.messages.not-party-leader", "&cYou can't join arenas because your aren't the leader of your party");
 
         //other values
-        yml.addDefault("map-selector.selection.permission", "bwselector.selector");
-        yml.addDefault("map-selector.selection.unlimited-message", "Unlimited");
+        yml.addDefault("map-selector.selections.permission", "bwselector.selector");
+        yml.addDefault("map-selector.selections.unlimited-message", "Unlimited");
+
+        //menu settings
+        yml.addDefault("map-selector.menus.bedwars-menu.title", "&8Play Bed Wars ");
+        yml.addDefault("map-selector.menus.bedwars-menu.slots", 36);
+        yml.addDefault("map-selector.menus.maps-menu.title", "&8Bed Wars ");
+        yml.addDefault("map-selector.menus.maps-menu.slots", 54);
+        yml.addDefault("map-selector.menus.maps-menu.maps-slots", "10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34");
 
         //first gui items
         addFirstGuiItem("join-random", 12, false, Material.BED,
@@ -77,7 +82,7 @@ public class MainConfig extends ConfigManager {
                 Arrays.asList("&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!"));
         addSecondGuiItem("map-no-permissions-no-uses", 0, false, Material.SULPHUR,
                 "&a{mapName}",
-                Arrays.asList("&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&c✘ You don't have the required rank", "&cor you have reached", "&cthe daily map selections limit!"));
+                Arrays.asList("&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&c✘ You don't have the required rank(s)", "&cor you have reached", "&cthe daily map selections limit!"));
 
         addSecondGuiItem("random-map", 39, false, Material.FIREWORK,
                 "&aRandom Map",
@@ -142,6 +147,6 @@ public class MainConfig extends ConfigManager {
     public void addSelectionsType(YamlConfiguration yml, String name, String permission, int uses, boolean unlimited) {
         yml.addDefault("map-selector.selections.selections." + name + ".permission", permission);
         yml.addDefault("map-selector.selections.selections." + name + ".daily-uses", uses);
-        yml.addDefault("map-selector.selections.selections." + name + "unlimited", unlimited);
+        yml.addDefault("map-selector.selections.selections." + name + ".unlimited", unlimited);
     }
 }
