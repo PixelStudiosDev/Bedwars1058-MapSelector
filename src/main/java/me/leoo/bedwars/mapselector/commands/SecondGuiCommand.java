@@ -1,11 +1,13 @@
 package me.leoo.bedwars.mapselector.commands;
 
 import com.andrei1058.bedwars.BedWars;
+import com.andrei1058.bedwars.api.arena.IArena;
+import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.proxy.api.CachedArena;
 import com.andrei1058.bedwars.proxy.arenamanager.ArenaManager;
 import me.leoo.bedwars.mapselector.MapSelector;
-import me.leoo.bedwars.mapselector.menu.MapSelectorMenu;
-import me.leoo.bedwars.mapselector.menu.MapSelectorMenuProxy;
+import me.leoo.bedwars.mapselector.menu.SelectorMenu;
+import me.leoo.bedwars.mapselector.menu.SelectorMenuProxy;
 import me.leoo.bedwars.mapselector.utils.BedwarsMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -15,9 +17,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SelectorMenuCommand extends BukkitCommand {
+public class SecondGuiCommand extends BukkitCommand {
 
-    public SelectorMenuCommand(String name) {
+    public SecondGuiCommand(String name) {
         super(name);
         setAliases(Collections.singletonList("bwmap"));
     }
@@ -28,12 +30,12 @@ public class SelectorMenuCommand extends BukkitCommand {
             return true;
 
         Player player = (Player) sender;
+        List<String> groups = new ArrayList<>();
 
         if (args.length == 1) {
             String group = args[0];
 
             if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARSPROXY)) {
-                List<String> groups = new ArrayList<>();
 
                 for (CachedArena arena : ArenaManager.getArenas()) {
                     if (!groups.contains(arena.getArenaGroup())) {
@@ -42,23 +44,32 @@ public class SelectorMenuCommand extends BukkitCommand {
                 }
 
                 for (String group1 : group.split(",")) {
-                    if (groups.contains(group1)) {
-                        MapSelectorMenuProxy.openSecondGui(player, group1, 0, 0);
-                    } else {
-                        player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.open.group_doesnt_exist"));
+                    if (!groups.contains(group1)) {
+                        player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.open.group-doesnt-exists"));
+                        return false;
                     }
                 }
+
+                SelectorMenuProxy.openSecondGui(player, group, 0);
             } else {
-                for (String group1 : group.split(",")) {
-                    if (BedWars.config.getList("arenaGroups").contains(group1)) {
-                        MapSelectorMenu.openSecondGui(player, group1, 0, 0);
-                    } else {
-                        player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.open.group_doesnt_exist"));
+
+                for (IArena arena : Arena.getArenas()) {
+                    if (!groups.contains(arena.getGroup())) {
+                        groups.add(arena.getGroup());
                     }
                 }
+
+                for (String group1 : group.split(",")) {
+                    if (!groups.contains(group1)) {
+                        player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.open.group-doesnt-exists"));
+                        return false;
+                    }
+                }
+
+                SelectorMenu.openSecondGui(player, group, 0);
             }
         } else {
-            player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map_selector.menu.open.missing"));
+            player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.open.missing2"));
         }
         return false;
     }
