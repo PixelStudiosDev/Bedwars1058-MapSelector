@@ -88,7 +88,7 @@ public class ConfigManager {
 
     public String getString(String path) {
         if (yml.getString(path) == null) {
-            MapSelector.getPlugin().getLogger().info("String " + path + " not found in " + yml.getName());
+            MapSelector.getPlugin().getLogger().info("String " + path + " not found in " + name + ".yml");
             return "MissingString";
         }
         return PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', yml.getString(path)));

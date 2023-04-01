@@ -3,23 +3,21 @@ package me.leoo.bedwars.mapselector;
 import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.proxy.BedWarsProxy;
 import lombok.Getter;
-import me.leoo.bedwars.mapselector.commands.GroupMenuCommand;
-import me.leoo.bedwars.mapselector.commands.ReloadCommand;
-import me.leoo.bedwars.mapselector.commands.SelectorMenuCommand;
+import me.leoo.bedwars.mapselector.commands.FirstGuiCommand;
+import me.leoo.bedwars.mapselector.commands.MainCommand;
+import me.leoo.bedwars.mapselector.commands.SecondGuiCommand;
 import me.leoo.bedwars.mapselector.configuration.CacheConfig;
 import me.leoo.bedwars.mapselector.configuration.ConfigManager;
 import me.leoo.bedwars.mapselector.configuration.MainConfig;
 import me.leoo.bedwars.mapselector.database.Database;
-import me.leoo.bedwars.mapselector.database.Yaml;
 import me.leoo.bedwars.mapselector.listeners.JoinListener;
-import me.leoo.bedwars.mapselector.listeners.ProxySelectorListeners;
-import me.leoo.bedwars.mapselector.listeners.SelectorListeners;
+import me.leoo.bedwars.mapselector.listeners.SelectorMenuListeners;
+import me.leoo.bedwars.mapselector.listeners.SelectorMenuProxyListeners;
 import me.leoo.bedwars.mapselector.utils.BedwarsMode;
 import me.leoo.bedwars.mapselector.utils.PlaceholdersUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandMap;
-import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
@@ -38,7 +37,6 @@ public class MapSelector extends JavaPlugin {
 
     private ConfigManager mainConfig;
     private ConfigManager cacheConfig;
-    private Yaml yamlConfig;
     private Database ddatabase;
     private BedwarsMode bedwarsMode;
 
@@ -48,13 +46,13 @@ public class MapSelector extends JavaPlugin {
 
         if (getPluginManager().getPlugin("BedWars1058") != null) {
             bedwarsMode = BedwarsMode.BEDWARS;
-            registerEvents(new SelectorListeners());
+            registerEvents(new SelectorMenuListeners());
 
             getPlugin().getLogger().info("Hooked into BedWars1058");
         }
         if (getPluginManager().getPlugin("BedWarsProxy") != null) {
             bedwarsMode = BedwarsMode.BEDWARSPROXY;
-            registerEvents(new ProxySelectorListeners());
+            registerEvents(new SelectorMenuProxyListeners());
 
             getPlugin().getLogger().info("Hooked into BedWarsProxy");
         }
@@ -66,7 +64,6 @@ public class MapSelector extends JavaPlugin {
 
         mainConfig = new MainConfig(MapSelector.getPlugin(), "config", "plugins/" + bedwarsMode.getName() + "/Addons/MapSelector");
         cacheConfig = new CacheConfig(MapSelector.getPlugin(), "cache", "plugins/" + bedwarsMode.getName() + "/Addons/MapSelector");
-        yamlConfig = new Yaml();
 
         connectDatabase();
 
@@ -81,36 +78,36 @@ public class MapSelector extends JavaPlugin {
                 Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
                 field.setAccessible(true);
                 CommandMap commandMap = (CommandMap) field.get(Bukkit.getServer());
-                commandMap.register("bedwarsmenu", new GroupMenuCommand("bedwarsmenu"));
-                commandMap.register("bedwarsmap", new SelectorMenuCommand("bedwarsmap"));
-                commandMap.register("bedwarsselector", new ReloadCommand("bedwarsselector"));
+                commandMap.register("bedwarsmenu", new FirstGuiCommand("bedwarsmenu"));
+                commandMap.register("bedwarsmap", new SecondGuiCommand("bedwarsmap"));
+                commandMap.register("bedwarsselector", new MainCommand("bedwarsselector"));
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
 
-            getPlugin().getLogger().info("&a" + getDescription().getName() + " plugin by itz_leoo has been successfully enabled.");
+            getPlugin().getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', "&a" + getDescription().getName() + " plugin by itz_leoo has been successfully enabled."));
         }
     }
 
     @Override
     public void onDisable() {
         if (ddatabase != null) ddatabase.close();
-        getPlugin().getLogger().info("&c" + getDescription().getName() + " plugin by itz_leoo has been successfully disabled.");
+        getPlugin().getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', "&c" + getDescription().getName() + " plugin by itz_leoo has been successfully disabled."));
     }
 
     public void debug(String string) {
         if (mainConfig == null) return;
-        if (mainConfig.getBoolean("map_selector.debug"))
-            getPlugin().getLogger().info(ChatColor.translateAlternateColorCodes('&', "[" + getPlugin().getDescription().getName() + "] " + string));
+        if (mainConfig.getBoolean("map-selector.debug"))
+            getPlugin().getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', string));
     }
 
     public void connectDatabase() {
         if (ddatabase == null) {
             try {
-                String storage = mainConfig.getString("map_selector.storage");
+                String storage = mainConfig.getString("map-selector.storage");
 
                 if (storage == null || storage.equalsIgnoreCase("sqlite")) {
-                    mainConfig.getYml().set("map_selector.storage", "SQLite");
+                    mainConfig.set("map-selector.storage", "SQLite");
 
                     File folder = new File(bedwarsMode.equals(BedwarsMode.BEDWARS) ? BedWars.plugin.getDataFolder() + "/Cache" : BedWarsProxy.getPlugin().getDataFolder() + "/Cache");
                     File file = new File(folder, "database.db");
@@ -136,6 +133,7 @@ public class MapSelector extends JavaPlugin {
 
                     ddatabase = new Database(file.getAbsolutePath());
                 } else {
+                    mainConfig.set("map-selector.storage", "MySQL");
                     if (bedwarsMode.equals(BedwarsMode.BEDWARS)) {
                         ddatabase = new Database(BedWars.config.getYml().getString("database.host"), BedWars.config.getYml().getInt("database.port"), BedWars.config.getYml().getString("database.database"), BedWars.config.getYml().getString("database.user"), BedWars.config.getYml().getString("database.pass"), BedWars.config.getYml().getBoolean("database.ssl"));
                     } else if (bedwarsMode.equals(BedwarsMode.BEDWARSPROXY)) {

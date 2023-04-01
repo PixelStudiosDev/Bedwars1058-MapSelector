@@ -5,6 +5,12 @@ main: me.leoo.bedwars.mapselector.MapSelector
 description: BedWars1058/BedwarsProxy Map Selector Addon
 softdepend: [ BedWarsProxy, BedWars1058, PlaceholderAPI ]
 permissions:
-    bwselector.reload:
-        default: op
-        description: Permissions required to run the command /bwselector reload
+  bwselector.reload:
+    default: op
+    description: Permission required to run the command /bwselector reload
+  bwselector.set:
+    default: op
+    description: Permission required to run the command /bwselector set
+  bwselector.reset:
+    default: op
+    description: Permission required to run the command /bwselector reset
