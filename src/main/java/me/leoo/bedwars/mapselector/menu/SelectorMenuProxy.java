@@ -2,6 +2,7 @@ package me.leoo.bedwars.mapselector.menu;
 
 import com.andrei1058.bedwars.proxy.api.ArenaStatus;
 import com.andrei1058.bedwars.proxy.api.CachedArena;
+import com.andrei1058.bedwars.proxy.api.Messages;
 import com.andrei1058.bedwars.proxy.arenamanager.ArenaManager;
 import com.andrei1058.bedwars.proxy.language.LanguageManager;
 import me.leoo.bedwars.mapselector.MapSelector;
@@ -41,9 +42,12 @@ public class SelectorMenuProxy {
             }
         }
 
+        com.andrei1058.bedwars.proxy.api.Language language = LanguageManager.get().getPlayerLanguage(player);
+        String displayGroup = language.getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + group);
+
         List<String> joinRandomLore = new ArrayList<>();
         for (String s : MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.bedwars-menu.items.join-random.lore")) {
-            s = s.replace("{groupName}", Misc.firstLetterUpperCase(group));
+            s = s.replace("{groupName}", displayGroup);
             joinRandomLore.add(s);
         }
 
@@ -52,7 +56,7 @@ public class SelectorMenuProxy {
                     Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.material")),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items.join-random.data"),
-                            MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.name").replace("{groupName}", Misc.firstLetterUpperCase(group)),
+                            MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.name").replace("{groupName}", displayGroup),
                             joinRandomLore,
                             MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.bedwars-menu.items.join-random.enchanted"),
                             group, null, null, null, null
@@ -64,7 +68,7 @@ public class SelectorMenuProxy {
                     Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.material")),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items.map-selector.data"),
-                            MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.name").replace("{groupName}", Misc.firstLetterUpperCase(group)),
+                            MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.name").replace("{groupName}", displayGroup),
                             MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.bedwars-menu.items.map-selector.lore"),
                             MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.bedwars-menu.items.map-selector.enchanted"),
                             group, null, null, null, null
@@ -119,6 +123,8 @@ public class SelectorMenuProxy {
         }
 
         com.andrei1058.bedwars.proxy.api.Language language = LanguageManager.get().getPlayerLanguage(player);
+        String displayGroup = language.getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + group);
+
         arenas.sort(Comparator.comparing(arena -> arena.getDisplayName(language)));
 
         for (String extraItems : MapSelector.getPlugin().getMainConfig().getYml().getConfigurationSection("map-selector.menus.maps-menu.items").getKeys(false)) {
@@ -146,7 +152,7 @@ public class SelectorMenuProxy {
 
             List<String> mapLore = new ArrayList<>();
             for (String s : MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.maps-menu.items.map.lore")) {
-                s = s.replace("{groupName}", Misc.firstLetterUpperCase(arenas.get(mapsIndex).getArenaGroup()));
+                s = s.replace("{groupName}", arenas.get(mapsIndex).getDisplayGroup(language));
                 s = s.replace("{availableGames}", "1");
                 s = s.replace("{timesJoined}", String.valueOf(Yaml.getMapJoins(player, arenas.get(mapsIndex).getArenaName())));
                 s = s.replace("{selectionsType}", Misc.getSelectionsType(player));
@@ -159,7 +165,7 @@ public class SelectorMenuProxy {
 
             List<String> mapFavoriteLore = new ArrayList<>();
             for (String s : MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.maps-menu.items.map-favorite.lore")) {
-                s = s.replace("{groupName}", Misc.firstLetterUpperCase(arenas.get(mapsIndex).getArenaGroup()));
+                s = s.replace("{groupName}", arenas.get(mapsIndex).getDisplayGroup(language));
                 s = s.replace("{availableGames}", "1");
                 s = s.replace("{timesJoined}", String.valueOf(Yaml.getMapJoins(player, arenas.get(mapsIndex).getArenaName())));
                 s = s.replace("{selectionsType}", Misc.getSelectionsType(player));
@@ -172,7 +178,7 @@ public class SelectorMenuProxy {
 
             List<String> mapNoUsesNoPermissionsLore = new ArrayList<>();
             for (String s : MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.maps-menu.items.map-no-permissions-no-uses.lore")) {
-                s = s.replace("{groupName}", Misc.firstLetterUpperCase(arenas.get(mapsIndex).getArenaGroup()));
+                s = s.replace("{groupName}", arenas.get(mapsIndex).getDisplayGroup(language));
                 s = s.replace("{availableGames}", "1");
                 s = s.replace("{timesJoined}", String.valueOf(Yaml.getMapJoins(player, arenas.get(mapsIndex).getArenaName())));
                 s = s.replace("{selectionsType}", Misc.getSelectionsType(player));
@@ -300,7 +306,7 @@ public class SelectorMenuProxy {
         if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.random-map.enabled")) {
             List<String> randomMapLore = new ArrayList<>();
             for (String s : MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.maps-menu.items.random-map.lore")) {
-                s = s.replace("{groupName}", Misc.firstLetterUpperCase(group));
+                s = s.replace("{groupName}", displayGroup);
                 s = s.replace("{selectionsType}", Misc.getSelectionsType(player));
                 s = s.replace("{remainingUses}", Misc.getSelectionsType(player).equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.selections.unlimited-message")) ? MapSelector.getPlugin().getMainConfig().getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Misc.getSelectionsType(player)) - MapSelector.getPlugin().getMapSelectorDatabase().getPlayerUses(player.getUniqueId())));
                 randomMapLore.add(s);
@@ -310,7 +316,7 @@ public class SelectorMenuProxy {
                     Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.material")),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.random-map.data"),
-                            MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.name").replace("{groupName}", Misc.firstLetterUpperCase(group)),
+                            MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.name").replace("{groupName}", displayGroup),
                             randomMapLore,
                             MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.random-map.enchanted"),
                             group, null, null, null, null
@@ -320,7 +326,7 @@ public class SelectorMenuProxy {
         if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.random-favourite.enabled")) {
             List<String> randomfavouriteLore = new ArrayList<>();
             for (String s : MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.maps-menu.items.random-favourite.lore")) {
-                s = s.replace("{groupName}", Misc.firstLetterUpperCase(group));
+                s = s.replace("{groupName}", displayGroup);
                 s = s.replace("{selectionsType}", Misc.getSelectionsType(player));
                 s = s.replace("{remainingUses}", Misc.getSelectionsType(player).equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.selections.unlimited-message")) ? MapSelector.getPlugin().getMainConfig().getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Misc.getSelectionsType(player)) - MapSelector.getPlugin().getMapSelectorDatabase().getPlayerUses(player.getUniqueId())));
                 randomfavouriteLore.add(s);
@@ -330,7 +336,7 @@ public class SelectorMenuProxy {
                     Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.material")),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.random-favourite.data"),
-                            MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.name").replace("{groupName}", Misc.firstLetterUpperCase(group)),
+                            MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.name").replace("{groupName}", displayGroup),
                             randomfavouriteLore,
                             MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.random-favourite.enchanted"),
                             group, null, null, null, null
@@ -342,7 +348,7 @@ public class SelectorMenuProxy {
                     Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.back.material")),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.back.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.back.data"),
-                            MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.back.name").replace("{groupName}", Misc.firstLetterUpperCase(group)),
+                            MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.back.name").replace("{groupName}", displayGroup),
                             MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.maps-menu.items.back.lore"),
                             MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.back.enchanted"),
                             group, null, null, null, null
