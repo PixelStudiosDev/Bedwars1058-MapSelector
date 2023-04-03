@@ -3,8 +3,8 @@ package me.leoo.bedwars.mapselector.menu;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.language.Language;
+import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.arena.Arena;
-import com.andrei1058.bedwars.proxy.api.Messages;
 import me.leoo.bedwars.mapselector.MapSelector;
 import me.leoo.bedwars.mapselector.database.Yaml;
 import me.leoo.bedwars.mapselector.utils.Misc;
@@ -40,7 +40,7 @@ public class SelectorMenu {
         }
 
         Language language = Language.getPlayerLanguage(player);
-        String displayGroup = language.getString(Messages.ARENA_DISPLAY_GROUP_PATH + group);
+        String displayGroup = language.m(Messages.ARENA_DISPLAY_GROUP_PATH + group.toLowerCase());
 
         List<String> joinRandomLore = new ArrayList<>();
         for (String s : MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.bedwars-menu.items.join-random.lore")) {
@@ -120,7 +120,7 @@ public class SelectorMenu {
         }
 
         Language language = Language.getPlayerLanguage(player);
-        String displayGroup = language.getString(Messages.ARENA_DISPLAY_GROUP_PATH + group);
+        String displayGroup = language.m(Messages.ARENA_DISPLAY_GROUP_PATH + group.toLowerCase());
 
         arenas.sort(Comparator.comparing(IArena::getDisplayName));
 

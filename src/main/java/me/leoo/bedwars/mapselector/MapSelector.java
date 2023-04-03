@@ -48,22 +48,22 @@ public class MapSelector extends JavaPlugin {
             bedwarsMode = BedwarsMode.BEDWARS;
             registerEvents(new SelectorMenuListeners());
 
-            getPlugin().getLogger().info("Hooked into BedWars1058");
+            getLogger().info("Hooked into BedWars1058");
         }
         if (getPluginManager().getPlugin("BedWarsProxy") != null) {
             bedwarsMode = BedwarsMode.BEDWARSPROXY;
             registerEvents(new SelectorMenuProxyListeners());
 
-            getPlugin().getLogger().info("Hooked into BedWarsProxy");
+            getLogger().info("Hooked into BedWarsProxy");
         }
 
         if (bedwarsMode == null){
-            getPlugin().getLogger().info("Bedwars1058/BedwarsProxy not found. Disabling...");
+            getLogger().info("Bedwars1058/BedwarsProxy not found. Disabling...");
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
-        mainConfig = new MainConfig(MapSelector.getPlugin(), "config", "plugins/" + bedwarsMode.getName() + "/Addons/MapSelector");
-        cacheConfig = new CacheConfig(MapSelector.getPlugin(), "cache", "plugins/" + bedwarsMode.getName() + "/Addons/MapSelector");
+        mainConfig = new MainConfig(this, "config", "plugins/" + bedwarsMode.getName() + "/Addons/MapSelector");
+        cacheConfig = new CacheConfig(this, "cache", "plugins/" + bedwarsMode.getName() + "/Addons/MapSelector");
 
         connectDatabase();
 
@@ -85,7 +85,7 @@ public class MapSelector extends JavaPlugin {
                 e.printStackTrace();
             }
 
-            getPlugin().getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', "&a" + getDescription().getName() + " plugin by itz_leoo has been successfully enabled."));
+            getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', "&a" + getDescription().getName() + " plugin by itz_leoo has been successfully enabled."));
         }
     }
 
