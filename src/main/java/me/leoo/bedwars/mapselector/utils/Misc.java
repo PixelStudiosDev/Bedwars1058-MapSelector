@@ -13,7 +13,6 @@ import com.mojang.authlib.properties.Property;
 import me.leoo.bedwars.mapselector.MapSelector;
 import me.leoo.bedwars.mapselector.database.Yaml;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -25,12 +24,6 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class Misc {
-
-    public static String firstLetterUpperCase(String string) {
-        if (string == null) return "";
-        if (string.length() < 1) return "";
-        return string.substring(0, 1).toUpperCase() + string.substring(1);
-    }
 
     public static String getSelectionsType(Player player) {
         String type = String.valueOf(0);
@@ -47,7 +40,7 @@ public class Misc {
     }
 
     public static void joinRandomGroup(Player player, String group, boolean unlimited, boolean favorite) {
-        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARSPROXY)) {
+        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.PROXY)) {
             List<CachedArena> arenas = new ArrayList<>();
             List<CachedArena> arenas1;
 
@@ -111,7 +104,7 @@ public class Misc {
     }
 
     public static void joinArena(Player player, String name, String group, boolean unlimited) {
-        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARSPROXY)) {
+        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.PROXY)) {
             List<CachedArena> arenas = new ArrayList<>();
 
             for (CachedArena cachedArena : ArenaManager.getArenas()) {
@@ -185,53 +178,60 @@ public class Misc {
         }
     }
 
-    public static ItemStack item(Material material, String headUrl, int data, String displayName, List<String> lore, boolean enchanted, String n1, String n2, String n3, String n4, String n5) {
-        if (material == null) material = Material.STONE;
-        if (material.equals(Material.WOOL)) {
+    public static ItemStack item(String material, String headUrl, int data, String displayName, List<String> lore, boolean enchanted, String n1, String n2, String n3, String n4, String n5) {
+        if (material.equals("WOOL")) {
             data = new Random().nextInt(16);
         }
 
         ItemStack itemStack;
         if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
-            itemStack = BedWars.nms.createItemStack(String.valueOf(material), 1, (short) data);
+            itemStack = BedWars.nms.createItemStack(material, 1, (short) data);
+            if(itemStack == null){
+                itemStack = BedWars.nms.createItemStack("STONE", 1, (short) data);
+            }
         } else {
             itemStack = BedWarsProxy.getItemAdapter().createItem(material, 1, (byte) data);
-        }
-
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(displayName);
-        itemMeta.setLore(lore);
-        if (enchanted) itemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-        itemStack.setItemMeta(itemMeta);
-
-        if (material.equals(Material.SKULL_ITEM) && headUrl != null) {
-            SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
-            GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-            profile.getProperties().put("textures", new Property("textures", headUrl));
-            try {
-                Field field = skullMeta.getClass().getDeclaredField("profile");
-                field.setAccessible(true);
-                field.set(skullMeta, profile);
-            } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException exception) {
-                exception.printStackTrace();
-                return null;
+            if(itemStack == null){
+                itemStack = BedWarsProxy.getItemAdapter().createItem("STONE", 1, (byte) data);
             }
-            itemStack.setItemMeta(skullMeta);
         }
 
-        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
-            itemStack = BedWars.nms.setTag(itemStack, "n1", n1 == null ? "" : n1);
-            itemStack = BedWars.nms.setTag(itemStack, "n2", n2 == null ? "" : n2);
-            itemStack = BedWars.nms.setTag(itemStack, "n3", n3 == null ? "" : n3);
-            itemStack = BedWars.nms.setTag(itemStack, "n4", n4 == null ? "" : n4);
-            itemStack = BedWars.nms.setTag(itemStack, "n5", n5 == null ? "" : n5);
-        } else {
-            itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n1", n1 == null ? "" : n1);
-            itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n2", n2 == null ? "" : n2);
-            itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n3", n3 == null ? "" : n3);
-            itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n4", n4 == null ? "" : n4);
-            itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n5", n5 == null ? "" : n5);
+        if(itemStack != null) {
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.setDisplayName(displayName);
+            itemMeta.setLore(lore);
+            if (enchanted) itemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
+            itemStack.setItemMeta(itemMeta);
+
+            if (material.equals("SKULL_ITEM") && headUrl != null) {
+                SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
+                GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+                profile.getProperties().put("textures", new Property("textures", headUrl));
+                try {
+                    Field field = skullMeta.getClass().getDeclaredField("profile");
+                    field.setAccessible(true);
+                    field.set(skullMeta, profile);
+                } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException exception) {
+                    exception.printStackTrace();
+                    return null;
+                }
+                itemStack.setItemMeta(skullMeta);
+            }
+
+            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
+                itemStack = BedWars.nms.setTag(itemStack, "n1", n1 == null ? "" : n1);
+                itemStack = BedWars.nms.setTag(itemStack, "n2", n2 == null ? "" : n2);
+                itemStack = BedWars.nms.setTag(itemStack, "n3", n3 == null ? "" : n3);
+                itemStack = BedWars.nms.setTag(itemStack, "n4", n4 == null ? "" : n4);
+                itemStack = BedWars.nms.setTag(itemStack, "n5", n5 == null ? "" : n5);
+            } else {
+                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n1", n1 == null ? "" : n1);
+                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n2", n2 == null ? "" : n2);
+                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n3", n3 == null ? "" : n3);
+                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n4", n4 == null ? "" : n4);
+                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n5", n5 == null ? "" : n5);
+            }
         }
 
         return itemStack;

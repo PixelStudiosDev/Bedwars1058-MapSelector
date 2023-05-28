@@ -24,16 +24,16 @@ public class MainCommand extends BukkitCommand {
         Player player = (Player) sender;
 
 
-        if (args[0].equalsIgnoreCase("reload")) {
-            if (args.length == 1) {
+        if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("reload")) {
                 if (player.hasPermission("bwselector.reload")) {
                     MapSelector.getPlugin().getMainConfig().reload();
                     MapSelector.getPlugin().getCacheConfig().reload();
                     player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.reload.success"));
                 }
             }
-        } else if (args[0].equalsIgnoreCase("resetuses")) {
-            if (args.length == 2) {
+        } else if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("resetuses")) {
                 if (player.hasPermission("bwselector.reset")) {
                     Player target = Bukkit.getPlayerExact(args[1]);
                     if (target == null) {
@@ -46,8 +46,8 @@ public class MainCommand extends BukkitCommand {
             } else {
                 player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.reset-uses.missing"));
             }
-        }else if (args[0].equalsIgnoreCase("setuses")) {
-            if (args.length == 3) {
+        }else if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("setuses")) {
                 if (player.hasPermission("bwselector.set")) {
                     Player target = Bukkit.getPlayerExact(args[1]);
                     if (target == null) {

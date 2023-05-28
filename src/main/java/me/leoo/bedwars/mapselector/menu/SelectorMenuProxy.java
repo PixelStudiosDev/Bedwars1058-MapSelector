@@ -2,6 +2,7 @@ package me.leoo.bedwars.mapselector.menu;
 
 import com.andrei1058.bedwars.proxy.api.ArenaStatus;
 import com.andrei1058.bedwars.proxy.api.CachedArena;
+import com.andrei1058.bedwars.proxy.api.Language;
 import com.andrei1058.bedwars.proxy.api.Messages;
 import com.andrei1058.bedwars.proxy.arenamanager.ArenaManager;
 import com.andrei1058.bedwars.proxy.language.LanguageManager;
@@ -9,7 +10,6 @@ import me.leoo.bedwars.mapselector.MapSelector;
 import me.leoo.bedwars.mapselector.database.Yaml;
 import me.leoo.bedwars.mapselector.utils.Misc;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -30,7 +30,7 @@ public class SelectorMenuProxy {
             if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.bedwars-menu.items." + extraItems + ".enabled") &&
                     MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.bedwars-menu.items." + extraItems + ".extra")) {
                 inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items." + extraItems + ".slot"),
-                        Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items." + extraItems + ".material")),
+                        Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items." + extraItems + ".material"),
                                 MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items." + extraItems + ".head-value"),
                                 MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items." + extraItems + ".data"),
                                 MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items." + extraItems + ".name"),
@@ -43,7 +43,10 @@ public class SelectorMenuProxy {
         }
 
         com.andrei1058.bedwars.proxy.api.Language language = LanguageManager.get().getPlayerLanguage(player);
-        String displayGroup = language.getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + group);
+        String displayGroup = group;
+        if (!group.contains(",")) {
+            displayGroup = language.getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + group.toLowerCase());
+        }
 
         List<String> joinRandomLore = new ArrayList<>();
         for (String s : MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.bedwars-menu.items.join-random.lore")) {
@@ -53,31 +56,31 @@ public class SelectorMenuProxy {
 
         if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.bedwars-menu.items.join-random.enabled")) {
             inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items.join-random.slot"),
-                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.material")),
+                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.material"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items.join-random.data"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.name").replace("{groupName}", displayGroup),
                             joinRandomLore,
                             MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.bedwars-menu.items.join-random.enchanted"),
-                            group, null, null, null, null
+                            group, displayGroup, null, null, null
                     )
             );
         }
         if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.bedwars-menu.items.map-selector.enabled")) {
             inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items.map-selector.slot"),
-                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.material")),
+                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.material"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items.map-selector.data"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.name").replace("{groupName}", displayGroup),
                             MapSelector.getPlugin().getMainConfig().getList("map-selector.menus.bedwars-menu.items.map-selector.lore"),
                             MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.bedwars-menu.items.map-selector.enchanted"),
-                            group, null, null, null, null
+                            group, displayGroup, null, null, null
                     )
             );
         }
         if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.bedwars-menu.items.close.enabled")) {
             inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items.close.slot"),
-                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.close.material")),
+                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.close.material"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.close.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items.close.data"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.close.name"),
@@ -89,7 +92,7 @@ public class SelectorMenuProxy {
         }
         if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.bedwars-menu.items.rejoin.enabled")) {
             inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items.rejoin.slot"),
-                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.rejoin.material")),
+                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.rejoin.material"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.rejoin.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.bedwars-menu.items.rejoin.data"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.rejoin.name"),
@@ -106,14 +109,13 @@ public class SelectorMenuProxy {
     public static void openSecondGui(Player player, String group, int page) {
         Inventory inventory = Bukkit.createInventory(null, MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.slots"), MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.title"));
 
-        List<String> groups;
-        groups = Arrays.asList(group.split(","));
+        List<String> groups = new ArrayList<>(Arrays.asList(group.split(",")));
 
         Misc.checkDate();
 
         List<CachedArena> arenas = new ArrayList<>();
         for (CachedArena arena : ArenaManager.getArenas()) {
-            if (groups.contains(arena.getArenaGroup()) && arena.getStatus().equals(ArenaStatus.WAITING) || arena.getStatus().equals(ArenaStatus.STARTING)) {
+            if (groups.contains(arena.getArenaGroup()) && (arena.getStatus().equals(ArenaStatus.WAITING) || arena.getStatus().equals(ArenaStatus.STARTING))) {
                 arenas.add(arena);
             }
         }
@@ -122,8 +124,11 @@ public class SelectorMenuProxy {
             return;
         }
 
-        com.andrei1058.bedwars.proxy.api.Language language = LanguageManager.get().getPlayerLanguage(player);
-        String displayGroup = language.getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + group);
+        Language language = LanguageManager.get().getPlayerLanguage(player);
+        String displayGroup = group;
+        if (!group.contains(",")) {
+            displayGroup = language.getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + group.toLowerCase());
+        }
 
         arenas.sort(Comparator.comparing(arena -> arena.getDisplayName(language)));
 
@@ -131,7 +136,7 @@ public class SelectorMenuProxy {
             if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items." + extraItems + ".enabled")
                     && MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items." + extraItems + ".extra")) {
                 inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items." + extraItems + ".slot"),
-                        Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items." + extraItems + ".material")),
+                        Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items." + extraItems + ".material"),
                                 MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items." + extraItems + ".head-value"),
                                 MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items." + extraItems + ".data"),
                                 MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items." + extraItems + ".name"),
@@ -144,7 +149,6 @@ public class SelectorMenuProxy {
         }
 
         String[] slots = MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.maps-slots").split(",");
-
         int mapsIndex = slots.length * page;
 
         for (String slot : slots) {
@@ -193,7 +197,7 @@ public class SelectorMenuProxy {
                 if (Yaml.isFavorite(player, String.valueOf(arenas.get(mapsIndex).getArenaName()))) {
                     if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.map-favorite.enabled")) {
                         inventory.setItem(Integer.parseInt(slot),
-                                Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-favorite.material")),
+                                Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-favorite.material"),
                                         MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-favorite.head-value"),
                                         MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.map-favorite.data"),
                                         MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-favorite.name").replace("{mapName}", arenas.get(mapsIndex).getDisplayName(language)),
@@ -206,7 +210,7 @@ public class SelectorMenuProxy {
                 } else {
                     if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.map.enabled")) {
                         inventory.setItem(Integer.parseInt(slot),
-                                Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map.material")),
+                                Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map.material"),
                                         MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map.head-value"),
                                         MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.map.data"),
                                         MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map.name").replace("{mapName}", arenas.get(mapsIndex).getDisplayName(language)),
@@ -223,7 +227,7 @@ public class SelectorMenuProxy {
                     if (Yaml.isFavorite(player, String.valueOf(arenas.get(mapsIndex).getArenaName()))) {
                         if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.map-favorite.enabled")) {
                             inventory.setItem(Integer.parseInt(slot),
-                                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-favorite.material")),
+                                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-favorite.material"),
                                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-favorite.head-value"),
                                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.map-favorite.data"),
                                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-favorite.name").replace("{mapName}", arenas.get(mapsIndex).getDisplayName(language)),
@@ -236,7 +240,7 @@ public class SelectorMenuProxy {
                     } else {
                         if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.map.enabled")) {
                             inventory.setItem(Integer.parseInt(slot),
-                                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map.material")),
+                                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map.material"),
                                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map.head-value"),
                                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.map.data"),
                                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map.name").replace("{mapName}", arenas.get(mapsIndex).getDisplayName(language)),
@@ -250,7 +254,7 @@ public class SelectorMenuProxy {
                 } else {
                     if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.map-no-permissions-no-uses.enabled")) {
                         inventory.setItem(Integer.parseInt(slot),
-                                Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-no-permissions-no-uses.material")),
+                                Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-no-permissions-no-uses.material"),
                                         MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-no-permissions-no-uses.head-value"),
                                         MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.map-no-permissions-no-uses.data"),
                                         MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-no-permissions-no-uses.name").replace("{mapName}", arenas.get(mapsIndex).getDisplayName(language)),
@@ -275,7 +279,7 @@ public class SelectorMenuProxy {
             }
 
             inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.next-page.slot"),
-                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.next-page.material")),
+                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.next-page.material"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.next-page.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.next-page.data"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.next-page.name"),
@@ -293,7 +297,7 @@ public class SelectorMenuProxy {
             }
 
             inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.previous-page.slot"),
-                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.previous-page.material")),
+                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.previous-page.material"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.previous-page.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.previous-page.data"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.previous-page.name"),
@@ -313,13 +317,13 @@ public class SelectorMenuProxy {
             }
 
             inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.random-map.slot"),
-                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.material")),
+                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.material"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.random-map.data"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.name").replace("{groupName}", displayGroup),
                             randomMapLore,
                             MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.random-map.enchanted"),
-                            group, null, null, null, null
+                            group, displayGroup, null, null, null
                     )
             );
         }
@@ -333,19 +337,19 @@ public class SelectorMenuProxy {
             }
 
             inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.random-favourite.slot"),
-                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.material")),
+                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.material"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.random-favourite.data"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.name").replace("{groupName}", displayGroup),
                             randomfavouriteLore,
                             MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.random-favourite.enchanted"),
-                            group, null, null, null, null
+                            group, displayGroup, null, null, null
                     )
             );
         }
         if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.menus.maps-menu.items.back.enabled")) {
             inventory.setItem(MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.back.slot"),
-                    Misc.item(Material.valueOf(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.back.material")),
+                    Misc.item(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.back.material"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.back.head-value"),
                             MapSelector.getPlugin().getMainConfig().getInt("map-selector.menus.maps-menu.items.back.data"),
                             MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.back.name").replace("{groupName}", displayGroup),

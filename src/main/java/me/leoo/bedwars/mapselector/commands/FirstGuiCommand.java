@@ -33,7 +33,7 @@ public class FirstGuiCommand extends BukkitCommand {
             String group = args[0];
             List<String> groups = new ArrayList<>();
 
-            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARSPROXY)) {
+            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.PROXY)) {
 
                 for (CachedArena arena : ArenaManager.getArenas()) {
                     if (!groups.contains(arena.getArenaGroup())) {
@@ -77,7 +77,7 @@ public class FirstGuiCommand extends BukkitCommand {
         if (args.length == 1) {
             List<String> groups = new ArrayList<>();
 
-            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARSPROXY)) {
+            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.PROXY)) {
                 for (CachedArena arena : ArenaManager.getArenas()) {
                     if (!groups.contains(arena.getArenaGroup())) {
                         groups.add(arena.getArenaGroup());

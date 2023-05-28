@@ -33,18 +33,16 @@ public class SelectorMenuListeners implements Listener {
         String tag4 = BedWars.nms.getTag(item, "n4");
         String tag5 = BedWars.nms.getTag(item, "n5");
 
-        Language language = Language.getPlayerLanguage(player);
-
         //first gui
         if (event.getView().getTitle().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.title"))) {
-            if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.name").replace("{groupName}", tag1 == null ? "" : language.m(Messages.ARENA_DISPLAY_GROUP_PATH + tag1.toLowerCase())))) {
+            if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.name").replace("{groupName}", tag2 == null ? "" : tag2))) {
                 if (MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.command").equals("default-action")) {
                     Misc.joinRandomGroup(player, tag1, false, false);
                     player.closeInventory();
                 } else {
                     player.performCommand(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.command"));
                 }
-            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.name").replace("{groupName}", tag1 == null ? "" : language.m(Messages.ARENA_DISPLAY_GROUP_PATH + tag1.toLowerCase())))) {
+            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.name").replace("{groupName}", tag2 == null ? "" : tag2))) {
                 if (MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.command").equals("default-action")) {
                     if (tag1 != null) SelectorMenu.openSecondGui(player, tag1, 0);
                 } else {
@@ -134,14 +132,14 @@ public class SelectorMenuListeners implements Listener {
                 } else {
                     player.performCommand(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-no-permissions-no-uses.command"));
                 }
-            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.name").replace("{groupName}", tag2 == null ? "" : language.m(Messages.ARENA_DISPLAY_GROUP_PATH + tag2.toLowerCase())))) {
+            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.name").replace("{groupName}", tag2 == null ? "" : tag2))) {
                 if (MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.command").equals("default-action")) {
                     Misc.joinRandomGroup(player, tag1, false, false);
                     player.closeInventory();
                 } else {
                     player.performCommand(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.command"));
                 }
-            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.name").replace("{groupName}", tag2 == null ? "" : language.m(Messages.ARENA_DISPLAY_GROUP_PATH + tag2.toLowerCase())))) {
+            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.name").replace("{groupName}", tag2 == null ? "" : tag2))) {
                 if (MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.command").equals("default-action")) {
                     if (Misc.getSelectionsType(player).equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.selections.unlimited-message"))) {
                         Misc.joinRandomGroup(player, tag1, true, true);

@@ -1,7 +1,7 @@
 package me.leoo.bedwars.mapselector.utils;
 
 public enum BedwarsMode {
-	BEDWARS("BedWars1058"), BEDWARSPROXY("BedWarsProxy");
+	BEDWARS("BedWars1058"), PROXY("BedWarsProxy");
 
 	private final String name;
 

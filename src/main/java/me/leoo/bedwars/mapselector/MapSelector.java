@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.logging.Level;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
@@ -51,13 +50,13 @@ public class MapSelector extends JavaPlugin {
             getLogger().info("Hooked into BedWars1058");
         }
         if (getPluginManager().getPlugin("BedWarsProxy") != null) {
-            bedwarsMode = BedwarsMode.BEDWARSPROXY;
+            bedwarsMode = BedwarsMode.PROXY;
             registerEvents(new SelectorMenuProxyListeners());
 
             getLogger().info("Hooked into BedWarsProxy");
         }
 
-        if (bedwarsMode == null){
+        if (bedwarsMode == null) {
             getLogger().info("Bedwars1058/BedwarsProxy not found. Disabling...");
             Bukkit.getPluginManager().disablePlugin(this);
         }
@@ -85,20 +84,20 @@ public class MapSelector extends JavaPlugin {
                 e.printStackTrace();
             }
 
-            getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', "&a" + getDescription().getName() + " plugin by itz_leoo has been successfully enabled."));
+            getLogger().info(ChatColor.translateAlternateColorCodes('&', "&a" + getDescription().getName() + " plugin by itz_leoo has been successfully enabled."));
         }
     }
 
     @Override
     public void onDisable() {
         if (ddatabase != null) ddatabase.close();
-        getPlugin().getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', "&c" + getDescription().getName() + " plugin by itz_leoo has been successfully disabled."));
+        getLogger().info(ChatColor.translateAlternateColorCodes('&', "&c" + getDescription().getName() + " plugin by itz_leoo has been successfully disabled."));
     }
 
     public void debug(String string) {
         if (mainConfig == null) return;
         if (mainConfig.getBoolean("map-selector.debug"))
-            getPlugin().getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', string));
+            getLogger().info(ChatColor.translateAlternateColorCodes('&', string));
     }
 
     public void connectDatabase() {
@@ -120,10 +119,10 @@ public class MapSelector extends JavaPlugin {
                     }
 
                     if (!file.exists()) {
-                        plugin.getLogger().info("Creating " + file.getPath());
+                        getLogger().info("Creating " + file.getPath());
                         try {
                             if (!file.createNewFile()) {
-                                plugin.getLogger().severe("Could not create " + file.getPath());
+                                getLogger().severe("Could not create " + file.getPath());
                                 return;
                             }
                         } catch (IOException exception) {
@@ -136,7 +135,7 @@ public class MapSelector extends JavaPlugin {
                     mainConfig.set("map-selector.storage", "MySQL");
                     if (bedwarsMode.equals(BedwarsMode.BEDWARS)) {
                         ddatabase = new Database(BedWars.config.getYml().getString("database.host"), BedWars.config.getYml().getInt("database.port"), BedWars.config.getYml().getString("database.database"), BedWars.config.getYml().getString("database.user"), BedWars.config.getYml().getString("database.pass"), BedWars.config.getYml().getBoolean("database.ssl"));
-                    } else if (bedwarsMode.equals(BedwarsMode.BEDWARSPROXY)) {
+                    } else if (bedwarsMode.equals(BedwarsMode.PROXY)) {
                         ddatabase = new Database(BedWarsProxy.config.getYml().getString("database.host"), BedWarsProxy.config.getYml().getInt("database.port"), BedWarsProxy.config.getYml().getString("database.database"), BedWarsProxy.config.getYml().getString("database.user"), BedWarsProxy.config.getYml().getString("database.pass"), BedWarsProxy.config.getYml().getBoolean("database.ssl"));
                     }
                 }

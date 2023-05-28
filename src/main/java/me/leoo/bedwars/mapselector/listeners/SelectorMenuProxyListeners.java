@@ -1,7 +1,6 @@
 package me.leoo.bedwars.mapselector.listeners;
 
 import com.andrei1058.bedwars.proxy.BedWarsProxy;
-import com.andrei1058.bedwars.proxy.api.Messages;
 import com.andrei1058.bedwars.proxy.language.LanguageManager;
 import me.leoo.bedwars.mapselector.MapSelector;
 import me.leoo.bedwars.mapselector.database.Yaml;
@@ -33,18 +32,16 @@ public class SelectorMenuProxyListeners implements Listener {
         String tag4 = BedWarsProxy.getItemAdapter().getTag(item, "n4");
         String tag5 = BedWarsProxy.getItemAdapter().getTag(item, "n5");
 
-        com.andrei1058.bedwars.proxy.api.Language language = LanguageManager.get().getPlayerLanguage(player);
-
         //first gui
         if (event.getView().getTitle().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.title"))) {
-            if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.name").replace("{groupName}", tag1 == null ? "" : language.getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + tag1)))) {
+            if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.name").replace("{groupName}", tag2 == null ? "" : tag2))) {
                 if (MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.command").equals("default-action")) {
                     Misc.joinRandomGroup(player, tag1, false, false);
                     player.closeInventory();
                 } else {
                     player.performCommand(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.join-random.command"));
                 }
-            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.name").replace("{groupName}", tag1 == null ? "" : language.getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + tag1)))) {
+            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.name").replace("{groupName}", tag2 == null ? "" : tag2))) {
                 if (MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.bedwars-menu.items.map-selector.command").equals("default-action")) {
                     if (tag1 != null) SelectorMenuProxy.openSecondGui(player, tag1, 0);
                 } else {
@@ -134,14 +131,14 @@ public class SelectorMenuProxyListeners implements Listener {
                 } else {
                     player.performCommand(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.map-no-permissions-no-uses.command"));
                 }
-            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.name").replace("{groupName}", tag2 == null ? "" : language.getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + tag2)))) {
+            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.name").replace("{groupName}", tag2 == null ? "" : tag2))) {
                 if (MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.command").equals("default-action")) {
                     Misc.joinRandomGroup(player, tag1, false, false);
                     player.closeInventory();
                 } else {
                     player.performCommand(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-map.command"));
                 }
-            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.name").replace("{groupName}", tag2 == null ? "" : language.getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + tag2)))) {
+            } else if (item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.name").replace("{groupName}", tag2 == null ? "" : tag2))) {
                 if (MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items.random-favourite.command").equals("default-action")) {
                     if (Misc.getSelectionsType(player).equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.selections.unlimited-message"))) {
                         Misc.joinRandomGroup(player, tag1, true, true);
@@ -183,7 +180,7 @@ public class SelectorMenuProxyListeners implements Listener {
                         item.getItemMeta().getDisplayName().equals(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items." + extra + ".name"))) {
                     if (MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items." + extra + ".command").equals("default-action")) {
                         if (player.isOp() || player.hasPermission("bwselector.reload")) {
-                            player.sendMessage("§c§l[Map Selector] §7You clicked on an extra item in one of the selector menu. §7You must edit the command or disable this item from the plugin's config §c(plugins/BedWarsProxy/Addons/MapSelector/config.yml)§7. §7To edit the item's command you have to modify the string §ccommand (path: map-selector.menus.maps-menu.items." + extra + ".command)§7. §7To disable this item you have to set to §cfalse §7the boolean §cenabled (path: map-selector.menus.maps-menu.items." + extra + ".enabled)§7.");
+                            player.sendMessage("§c§l[Map Selector] §7You clicked on an extra item in one of the selector menu. §7You must edit the command or disable this item from the plugin's config §c(plugins/BedWarsProxy/Addons/MapSelector/config.yml)§7. §7To edit the item's command edit the string §ccommand (path: map-selector.menus.maps-menu.items." + extra + ".command)§7. §7To disable this item set to §cfalse §7the boolean §cenabled (path: map-selector.menus.maps-menu.items." + extra + ".enabled)§7.");
                         }
                     } else {
                         player.performCommand(MapSelector.getPlugin().getMainConfig().getString("map-selector.menus.maps-menu.items." + extra + ".command"));

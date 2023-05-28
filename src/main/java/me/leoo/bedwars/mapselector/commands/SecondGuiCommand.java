@@ -35,7 +35,7 @@ public class SecondGuiCommand extends BukkitCommand {
         if (args.length == 1) {
             String group = args[0];
 
-            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARSPROXY)) {
+            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.PROXY)) {
 
                 for (CachedArena arena : ArenaManager.getArenas()) {
                     if (!groups.contains(arena.getArenaGroup())) {
@@ -77,7 +77,7 @@ public class SecondGuiCommand extends BukkitCommand {
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
         if (args.length == 1) {
-            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARSPROXY)) {
+            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.PROXY)) {
                 List<String> groups = new ArrayList<>();
 
                 for (CachedArena arena : ArenaManager.getArenas()) {
