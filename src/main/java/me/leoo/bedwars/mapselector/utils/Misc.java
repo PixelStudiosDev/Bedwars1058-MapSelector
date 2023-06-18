@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 package me.leoo.bedwars.mapselector.utils;
 
 import com.andrei1058.bedwars.BedWars;

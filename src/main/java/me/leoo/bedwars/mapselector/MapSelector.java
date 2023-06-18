@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 package me.leoo.bedwars.mapselector;
 
 import com.andrei1058.bedwars.BedWars;
@@ -36,7 +40,7 @@ public class MapSelector extends JavaPlugin {
 
     private ConfigManager mainConfig;
     private ConfigManager cacheConfig;
-    private Database ddatabase;
+    private Database database;
     private BedwarsMode bedwarsMode;
 
     @Override
@@ -90,7 +94,7 @@ public class MapSelector extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (ddatabase != null) ddatabase.close();
+        if (database != null) database.close();
         getLogger().info(ChatColor.translateAlternateColorCodes('&', "&c" + getDescription().getName() + " plugin by itz_leoo has been successfully disabled."));
     }
 
@@ -101,7 +105,7 @@ public class MapSelector extends JavaPlugin {
     }
 
     public void connectDatabase() {
-        if (ddatabase == null) {
+        if (database == null) {
             try {
                 String storage = mainConfig.getString("map-selector.storage");
 
@@ -130,13 +134,13 @@ public class MapSelector extends JavaPlugin {
                         }
                     }
 
-                    ddatabase = new Database(file.getAbsolutePath());
+                    database = new Database(file.getAbsolutePath());
                 } else {
                     mainConfig.set("map-selector.storage", "MySQL");
                     if (bedwarsMode.equals(BedwarsMode.BEDWARS)) {
-                        ddatabase = new Database(BedWars.config.getYml().getString("database.host"), BedWars.config.getYml().getInt("database.port"), BedWars.config.getYml().getString("database.database"), BedWars.config.getYml().getString("database.user"), BedWars.config.getYml().getString("database.pass"), BedWars.config.getYml().getBoolean("database.ssl"));
+                        database = new Database(BedWars.config.getYml().getString("database.host"), BedWars.config.getYml().getInt("database.port"), BedWars.config.getYml().getString("database.database"), BedWars.config.getYml().getString("database.user"), BedWars.config.getYml().getString("database.pass"), BedWars.config.getYml().getBoolean("database.ssl"));
                     } else if (bedwarsMode.equals(BedwarsMode.PROXY)) {
-                        ddatabase = new Database(BedWarsProxy.config.getYml().getString("database.host"), BedWarsProxy.config.getYml().getInt("database.port"), BedWarsProxy.config.getYml().getString("database.database"), BedWarsProxy.config.getYml().getString("database.user"), BedWarsProxy.config.getYml().getString("database.pass"), BedWarsProxy.config.getYml().getBoolean("database.ssl"));
+                        database = new Database(BedWarsProxy.config.getYml().getString("database.host"), BedWarsProxy.config.getYml().getInt("database.port"), BedWarsProxy.config.getYml().getString("database.database"), BedWarsProxy.config.getYml().getString("database.user"), BedWarsProxy.config.getYml().getString("database.pass"), BedWarsProxy.config.getYml().getBoolean("database.ssl"));
                     }
                 }
             } catch (Exception exception) {
@@ -150,11 +154,11 @@ public class MapSelector extends JavaPlugin {
     }
 
     public Database getMapSelectorDatabase() {
-        if (ddatabase == null) {
+        if (database == null) {
             getPlugin().getLogger().info("Database connection not found. Reconnecting...");
             connectDatabase();
         }
-        return ddatabase;
+        return database;
     }
 
     private void registerEvents(Listener... listeners) {

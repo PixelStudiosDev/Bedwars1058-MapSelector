@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 package me.leoo.bedwars.mapselector.utils;
 
 public enum BedwarsMode {

@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 package me.leoo.bedwars.mapselector.listeners;
 
 import com.andrei1058.bedwars.proxy.BedWarsProxy;

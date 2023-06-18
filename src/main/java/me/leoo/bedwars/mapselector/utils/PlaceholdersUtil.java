@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 package me.leoo.bedwars.mapselector.utils;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;

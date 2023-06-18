@@ -71,7 +71,6 @@
 		</dependency>
 	</dependencies>
 
-
 	<build>
 		<finalName>Bedwars1058-MapSelector</finalName>
 		<defaultGoal>clean install</defaultGoal>

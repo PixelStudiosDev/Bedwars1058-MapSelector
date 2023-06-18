@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 package me.leoo.bedwars.mapselector.menu;
 
 import com.andrei1058.bedwars.proxy.api.ArenaStatus;

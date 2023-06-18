@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 package me.leoo.bedwars.mapselector.database;
 
 import com.andrei1058.bedwars.api.arena.GameState;

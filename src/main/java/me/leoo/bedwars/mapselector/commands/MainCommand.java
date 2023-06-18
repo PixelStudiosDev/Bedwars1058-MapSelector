@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 package me.leoo.bedwars.mapselector.commands;
 
 import me.leoo.bedwars.mapselector.MapSelector;

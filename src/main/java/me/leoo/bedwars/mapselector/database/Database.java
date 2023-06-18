@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 package me.leoo.bedwars.mapselector.database;
 
 import com.zaxxer.hikari.HikariConfig;
