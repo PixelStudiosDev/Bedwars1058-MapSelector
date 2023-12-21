@@ -4,8 +4,13 @@
 
 package me.leoo.bedwars.mapselector.utils;
 
+import lombok.Getter;
+
+@Getter
 public enum BedwarsMode {
-	BEDWARS("BedWars1058"), PROXY("BedWarsProxy");
+
+	BEDWARS("BedWars1058"),
+	PROXY("BedWarsProxy");
 
 	private final String name;
 
@@ -13,7 +18,4 @@ public enum BedwarsMode {
 		this.name = name;
 	}
 
-	public String getName() {
-		return name;
-	}
 }

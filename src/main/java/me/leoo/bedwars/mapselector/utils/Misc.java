@@ -16,6 +16,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import me.leoo.bedwars.mapselector.MapSelector;
 import me.leoo.bedwars.mapselector.database.Yaml;
+import me.leoo.bedwars.mapselector.menu.SelectorMenu;
+import me.leoo.bedwars.mapselector.menu.SelectorMenuProxy;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -200,7 +202,7 @@ public class Misc {
             }
         }
 
-        if(itemStack != null) {
+        if (itemStack != null) {
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setDisplayName(displayName);
             itemMeta.setLore(lore);
@@ -223,21 +225,46 @@ public class Misc {
                 itemStack.setItemMeta(skullMeta);
             }
 
-            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
-                itemStack = BedWars.nms.setTag(itemStack, "n1", n1 == null ? "" : n1);
-                itemStack = BedWars.nms.setTag(itemStack, "n2", n2 == null ? "" : n2);
-                itemStack = BedWars.nms.setTag(itemStack, "n3", n3 == null ? "" : n3);
-                itemStack = BedWars.nms.setTag(itemStack, "n4", n4 == null ? "" : n4);
-                itemStack = BedWars.nms.setTag(itemStack, "n5", n5 == null ? "" : n5);
-            } else {
-                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n1", n1 == null ? "" : n1);
-                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n2", n2 == null ? "" : n2);
-                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n3", n3 == null ? "" : n3);
-                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n4", n4 == null ? "" : n4);
-                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n5", n5 == null ? "" : n5);
-            }
+            itemStack = setTag(itemStack, "n1", n1 == null ? "" : n1);
+            itemStack = setTag(itemStack, "n2", n2 == null ? "" : n2);
+            itemStack = setTag(itemStack, "n3", n3 == null ? "" : n3);
+            itemStack = setTag(itemStack, "n4", n4 == null ? "" : n4);
+            itemStack = setTag(itemStack, "n5", n5 == null ? "" : n5);
         }
 
         return itemStack;
     }
+
+    public static void openFirstGui(Player player, String group) {
+        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
+            SelectorMenu.openFirstGui(player, group);
+        } else {
+            SelectorMenuProxy.openFirstGui(player, group);
+        }
+    }
+
+    public static void openSecondGui(Player player, String group, int page) {
+        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
+            SelectorMenu.openSecondGui(player, group, page);
+        } else {
+            SelectorMenuProxy.openSecondGui(player, group, page);
+        }
+    }
+
+    public static String getTag(ItemStack itemStack, String tag) {
+        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
+            return BedWars.nms.getTag(itemStack, tag);
+        } else {
+            return BedWarsProxy.getItemAdapter().getTag(itemStack, tag);
+        }
+    }
+
+    public static ItemStack setTag(ItemStack itemStack, String tag, String value) {
+        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
+            return BedWars.nms.setTag(itemStack, tag, value);
+        } else {
+            return BedWarsProxy.getItemAdapter().addTag(itemStack, tag, value);
+        }
+    }
+
 }

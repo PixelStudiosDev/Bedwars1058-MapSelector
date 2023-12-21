@@ -16,7 +16,6 @@ import me.leoo.bedwars.mapselector.configuration.MainConfig;
 import me.leoo.bedwars.mapselector.database.Database;
 import me.leoo.bedwars.mapselector.listeners.JoinListener;
 import me.leoo.bedwars.mapselector.listeners.SelectorMenuListeners;
-import me.leoo.bedwars.mapselector.listeners.SelectorMenuProxyListeners;
 import me.leoo.bedwars.mapselector.utils.BedwarsMode;
 import me.leoo.bedwars.mapselector.utils.PlaceholdersUtil;
 import org.bukkit.Bukkit;
@@ -29,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
@@ -47,22 +47,19 @@ public class MapSelector extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
-        if (getPluginManager().getPlugin("BedWars1058") != null) {
-            bedwarsMode = BedwarsMode.BEDWARS;
-            registerEvents(new SelectorMenuListeners());
-
-            getLogger().info("Hooked into BedWars1058");
-        }
-        if (getPluginManager().getPlugin("BedWarsProxy") != null) {
-            bedwarsMode = BedwarsMode.PROXY;
-            registerEvents(new SelectorMenuProxyListeners());
-
-            getLogger().info("Hooked into BedWarsProxy");
+        for (BedwarsMode mode : BedwarsMode.values()) {
+            if (getPluginManager().isPluginEnabled(mode.getName())) {
+                bedwarsMode = mode;
+                registerEvents(new SelectorMenuListeners());
+                getLogger().info("Hooked into " + mode.getName());
+                break;
+            }
         }
 
         if (bedwarsMode == null) {
             getLogger().info("Bedwars1058/BedwarsProxy not found. Disabling...");
             Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
 
         mainConfig = new MainConfig(this, "config", "plugins/" + bedwarsMode.getName() + "/Addons/MapSelector");
@@ -85,7 +82,7 @@ public class MapSelector extends JavaPlugin {
                 commandMap.register("bedwarsmap", new SecondGuiCommand("bedwarsmap"));
                 commandMap.register("bedwarsselector", new MainCommand("bedwarsselector"));
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
+                getLogger().log(Level.SEVERE, "An error has occured while registering commands", e);
             }
 
             getLogger().info(ChatColor.translateAlternateColorCodes('&', "&a" + getDescription().getName() + " plugin by itz_leoo has been successfully enabled."));
@@ -105,51 +102,52 @@ public class MapSelector extends JavaPlugin {
     }
 
     public void connectDatabase() {
-        if (database == null) {
-            try {
-                String storage = mainConfig.getString("map-selector.storage");
+        if (database != null) {
+            return;
+        }
+        try {
+            String storage = mainConfig.getString("map-selector.storage");
 
-                if (storage == null || storage.equalsIgnoreCase("sqlite")) {
-                    mainConfig.set("map-selector.storage", "SQLite");
+            if (storage == null || storage.equalsIgnoreCase("sqlite")) {
+                mainConfig.set("map-selector.storage", "SQLite");
 
-                    File folder = new File(bedwarsMode.equals(BedwarsMode.BEDWARS) ? BedWars.plugin.getDataFolder() + "/Cache" : BedWarsProxy.getPlugin().getDataFolder() + "/Cache");
-                    File file = new File(folder, "database.db");
+                File folder = new File((bedwarsMode == BedwarsMode.BEDWARS ? BedWars.plugin.getDataFolder() : BedWarsProxy.getPlugin().getDataFolder()) + "/Cache");
+                File file = new File(folder, "database.db");
 
-                    if (!folder.exists()) {
-                        getPlugin().getLogger().info("Creating " + folder.getPath());
-                        if (!folder.mkdirs()) {
-                            getPlugin().getLogger().severe("Could not create " + folder.getPath());
-                        }
-                    }
-
-                    if (!file.exists()) {
-                        getLogger().info("Creating " + file.getPath());
-                        try {
-                            if (!file.createNewFile()) {
-                                getLogger().severe("Could not create " + file.getPath());
-                                return;
-                            }
-                        } catch (IOException exception) {
-                            exception.printStackTrace();
-                        }
-                    }
-
-                    database = new Database(file.getAbsolutePath());
-                } else {
-                    mainConfig.set("map-selector.storage", "MySQL");
-                    if (bedwarsMode.equals(BedwarsMode.BEDWARS)) {
-                        database = new Database(BedWars.config.getYml().getString("database.host"), BedWars.config.getYml().getInt("database.port"), BedWars.config.getYml().getString("database.database"), BedWars.config.getYml().getString("database.user"), BedWars.config.getYml().getString("database.pass"), BedWars.config.getYml().getBoolean("database.ssl"));
-                    } else if (bedwarsMode.equals(BedwarsMode.PROXY)) {
-                        database = new Database(BedWarsProxy.config.getYml().getString("database.host"), BedWarsProxy.config.getYml().getInt("database.port"), BedWarsProxy.config.getYml().getString("database.database"), BedWarsProxy.config.getYml().getString("database.user"), BedWarsProxy.config.getYml().getString("database.pass"), BedWarsProxy.config.getYml().getBoolean("database.ssl"));
+                if (!folder.exists()) {
+                    getPlugin().getLogger().info("Creating " + folder.getPath());
+                    if (!folder.mkdirs()) {
+                        getPlugin().getLogger().severe("Could not create " + folder.getPath());
                     }
                 }
-            } catch (Exception exception) {
-                exception.printStackTrace();
 
-                getPlugin().getLogger().info("Unavailable database connection");
+                if (!file.exists()) {
+                    getLogger().info("Creating " + file.getPath());
+                    try {
+                        if (!file.createNewFile()) {
+                            getLogger().severe("Could not create " + file.getPath());
+                            return;
+                        }
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
+                }
 
-                Bukkit.getPluginManager().disablePlugin(getPlugin());
+                database = new Database(file.getAbsolutePath());
+            } else {
+                mainConfig.set("map-selector.storage", "MySQL");
+                if (bedwarsMode.equals(BedwarsMode.BEDWARS)) {
+                    database = new Database(BedWars.config.getYml().getString("database.host"), BedWars.config.getYml().getInt("database.port"), BedWars.config.getYml().getString("database.database"), BedWars.config.getYml().getString("database.user"), BedWars.config.getYml().getString("database.pass"), BedWars.config.getYml().getBoolean("database.ssl"));
+                } else if (bedwarsMode.equals(BedwarsMode.PROXY)) {
+                    database = new Database(BedWarsProxy.config.getYml().getString("database.host"), BedWarsProxy.config.getYml().getInt("database.port"), BedWarsProxy.config.getYml().getString("database.database"), BedWarsProxy.config.getYml().getString("database.user"), BedWarsProxy.config.getYml().getString("database.pass"), BedWarsProxy.config.getYml().getBoolean("database.ssl"));
+                }
             }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+
+            getPlugin().getLogger().info("Unavailable database connection");
+
+            Bukkit.getPluginManager().disablePlugin(getPlugin());
         }
     }
 

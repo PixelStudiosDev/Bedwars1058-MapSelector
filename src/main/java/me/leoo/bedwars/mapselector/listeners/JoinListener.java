@@ -20,4 +20,5 @@ public class JoinListener implements Listener {
         Yaml.checkStored(player);
         MapSelector.getPlugin().getMapSelectorDatabase().checkStored(player.getUniqueId());
     }
+
 }
