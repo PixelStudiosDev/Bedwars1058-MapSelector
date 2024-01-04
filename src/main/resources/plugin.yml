@@ -1,16 +1,9 @@
 name: BedWars1058-MapSelector
-version: 1.3.1
+version: ${project.version}
 author: itz_leoo
 main: me.leoo.bedwars.mapselector.MapSelector
 description: BedWars1058/BedwarsProxy Map Selector Addon
-softdepend: [ BedWarsProxy, BedWars1058, PlaceholderAPI ]
-permissions:
-  bwselector.reload:
-    default: op
-    description: Permission required to run the command /bwselector reload
-  bwselector.set:
-    default: op
-    description: Permission required to run the command /bwselector set
-  bwselector.reset:
-    default: op
-    description: Permission required to run the command /bwselector reset
+softdepend:
+  - BedWarsProxy
+  - BedWars1058
+  - PlaceholderAPI
