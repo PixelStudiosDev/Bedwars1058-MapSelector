@@ -1,13 +1,10 @@
-/*
- *
- */
-
 package me.leoo.bedwars.mapselector.configuration;
 
+import com.cryptomorin.xseries.XMaterial;
 import me.leoo.bedwars.mapselector.MapSelector;
-import org.bukkit.Material;
+import me.leoo.utils.bukkit.config.ConfigManager;
+import me.leoo.utils.bukkit.items.ItemBuilder;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -16,17 +13,17 @@ import java.util.List;
 
 public class MainConfig extends ConfigManager {
 
-    public MainConfig(Plugin plugin, String name, String directory) {
-        super(plugin, name, directory);
+    public MainConfig(String name, String directory) {
+        super(name, directory);
 
         YamlConfiguration yml = getYml();
 
         //header
-        yml.options().header(MapSelector.getPlugin().getDescription().getName() + " v" + MapSelector.getPlugin().getDescription().getVersion() + " made by " + MapSelector.getPlugin().getDescription().getAuthors() + ".\n" +
-                "Dependencies: " + MapSelector.getPlugin().getDescription().getDepend() + ".\n" +
-                "Soft Dependencies: " + MapSelector.getPlugin().getDescription().getSoftDepend() + ".\n" +
-                "See the wiki: https://leo18bernese.gitbook.io/bedwars1058-mapselector/\n" +
-                "Join my discord server for support: https://discord.gg/dtwanz4GQg\n" +
+        yml.options().header(MapSelector.get().getDescription().getName() + " v" + MapSelector.get().getDescription().getVersion() + " made by " + MapSelector.get().getDescription().getAuthors() + ".\n" +
+                "Dependencies: " + MapSelector.get().getDescription().getDepend() + ".\n" +
+                "Soft Dependencies: " + MapSelector.get().getDescription().getSoftDepend() + ".\n" +
+                "Read the wiki: https://leo18bernese.gitbook.io/bedwars1058-mapselector/\n" +
+                "Join my discord for support: https://pixelstudios.dev/discord\n" +
                 "Storage methods: MySQL / SQLite.\n");
 
         //settings
@@ -64,53 +61,53 @@ public class MainConfig extends ConfigManager {
         yml.addDefault("map-selector.menus.maps-menu.maps-slots", "10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34");
 
         //first gui items
-        addFirstGuiItem("join-random", 12, false, Material.BED,
+        addFirstGuiItem("join-random", 12, XMaterial.RED_BED,
                 "&aBed Wars ({groupName})",
                 Arrays.asList("&7Play a game of Bed Wars {groupName}.", "", "&eClick to play!"));
-        addFirstGuiItem("map-selector", 14, false, Material.SIGN,
+        addFirstGuiItem("map-selector", 14, XMaterial.OAK_SIGN,
                 "&aMap Selector ({groupName})",
                 Arrays.asList("&7Pick which map you want to play", "&7from a list of available games.", "", "&eClick to browse!"));
-        addFirstGuiItem("close", 31, false, Material.BARRIER,
+        addFirstGuiItem("close", 31, XMaterial.BARRIER,
                 "&cClose",
                 Collections.emptyList());
-        addFirstGuiItem("rejoin", 35, false, Material.ENDER_PEARL,
+        addFirstGuiItem("rejoin", 35, XMaterial.ENDER_PEARL,
                 "&cClick here to rejoin!",
                 Arrays.asList("&7Click here to rejoin your game", "&7if you have been disconnected", "&7from it."));
 
         //second gui items
-        addSecondGuiItem("map", 0, false, Material.PAPER,
+        addSecondGuiItem("map", 0, XMaterial.PAPER,
                 "&a{mapName}",
                 Arrays.asList("&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!"));
-        addSecondGuiItem("map-favorite", 0, false, Material.EMPTY_MAP,
+        addSecondGuiItem("map-favorite", 0, XMaterial.MAP,
                 "&b✫ &a{mapName}",
                 Arrays.asList("&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!"));
-        addSecondGuiItem("map-no-permissions-no-uses", 0, false, Material.SULPHUR,
+        addSecondGuiItem("map-no-permissions-no-uses", 0, XMaterial.GUNPOWDER,
                 "&a{mapName}",
                 Arrays.asList("&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&c✘ You don't have the required rank(s)", "&cor you have reached", "&cthe daily map selections limit!"));
 
-        addSecondGuiItem("random-map", 39, false, Material.FIREWORK,
+        addSecondGuiItem("random-map", 39, XMaterial.FIREWORK_ROCKET,
                 "&aRandom Map",
                 Arrays.asList("&8{groupName}", "", "&7Map selections: &a{selectionsType}", "", "&a▸ Click to Play"));
-        addSecondGuiItem("random-favourite", 41, false, Material.DIAMOND,
+        addSecondGuiItem("random-favourite", 41, XMaterial.DIAMOND,
                 "&aRandom Favourite",
                 Arrays.asList("&8{groupName}", "", "&7Map selections: &a{selectionsType}", "", "&a▸ Click to Play"));
-        addSecondGuiItem("back", 49, false, Material.ARROW,
+        addSecondGuiItem("back", 49, XMaterial.ARROW,
                 "&aBack",
                 Collections.emptyList());
-        addSecondGuiItem("next-page", 26, false, Material.ARROW,
+        addSecondGuiItem("next-page", 26, XMaterial.ARROW,
                 "&aNext Page",
                 Collections.singletonList("&ePage {nextPage}"));
-        addSecondGuiItem("previous-page", 18, false, Material.ARROW,
+        addSecondGuiItem("previous-page", 18, XMaterial.ARROW,
                 "&aPrevious Page",
                 Collections.singletonList("&ePage {previousPage}"));
 
         //extra items
-        addFirstGuiItem("practice", 27, true, Material.WOOL,
+        addFirstGuiItem("practice", 27, XMaterial.RED_BED,
                 "&aPractice",
                 Arrays.asList("&7Improve your gameplay by", "&7practicing different aspects of", "&7Bed Wars!", "", "&eClick to view modes!"));
-        addSecondGuiItem("book", 53, true, Material.BOOK,
+        addSecondGuiItem("book", 53, XMaterial.BOOK,
                 "&aMap Selection",
-                Arrays.asList("&7Each day you can choose which", "&7map you want to play 1 time.", "&7Unlock unlimited map selection!", "&7by upgrading to &bMVP&c+ &7rank", "&7on our store!", "", "&ehttps://store.hypixel.net!"));
+                Arrays.asList("&7Each day you can choose which", "&7map you want to play 1 time.", "&7Unlock unlimited map selection!", "&7by upgrading to &bMVP&c+ &7rank", "&7on our store!", "", "&ehttps://store.myserver.net!"));
 
         //selections settings
         addSelectionsType(yml, "default", "bwselector.default", 3, false);
@@ -122,35 +119,19 @@ public class MainConfig extends ConfigManager {
     }
 
 
-    public void addFirstGuiItem(String name, int slot, boolean extra, Material material, String itemName, List<String> itemLore) {
-        getYml().addDefault("map-selector.menus.bedwars-menu.items." + name + ".material", material.name());
-        getYml().addDefault("map-selector.menus.bedwars-menu.items." + name + ".enabled", true);
-        getYml().addDefault("map-selector.menus.bedwars-menu.items." + name + ".extra", extra);
-        getYml().addDefault("map-selector.menus.bedwars-menu.items." + name + ".slot", slot);
-        getYml().addDefault("map-selector.menus.bedwars-menu.items." + name + ".command", "default-action");
-        getYml().addDefault("map-selector.menus.bedwars-menu.items." + name + ".head-value", "Head value here (see: https://bit.ly/3eF7h8l)");
-        getYml().addDefault("map-selector.menus.bedwars-menu.items." + name + ".data", 0);
-        getYml().addDefault("map-selector.menus.bedwars-menu.items." + name + ".name", itemName);
-        getYml().addDefault("map-selector.menus.bedwars-menu.items." + name + ".lore", itemLore);
-        getYml().addDefault("map-selector.menus.bedwars-menu.items." + name + ".enchanted", false);
+    private void addFirstGuiItem(String name, int slot, XMaterial material, String itemName, List<String> itemLore) {
+        new ItemBuilder(material).setName(itemName).setLore(itemLore).setSlot(slot).saveIntoConfig("map-selector.menus.bedwars-menu.items." + name, this);
     }
 
-    public void addSecondGuiItem(String name, int slot, boolean extra, Material material, String itemName, List<String> itemLore) {
-        getYml().addDefault("map-selector.menus.maps-menu.items." + name + ".material", material.name());
-        getYml().addDefault("map-selector.menus.maps-menu.items." + name + ".enabled", true);
-        getYml().addDefault("map-selector.menus.maps-menu.items." + name + ".extra", extra);
-        getYml().addDefault("map-selector.menus.maps-menu.items." + name + ".slot", slot);
-        getYml().addDefault("map-selector.menus.maps-menu.items." + name + ".command", "default-action");
-        getYml().addDefault("map-selector.menus.maps-menu.items." + name + ".head-value", "Head value here (see: https://bit.ly/3eF7h8l)");
-        getYml().addDefault("map-selector.menus.maps-menu.items." + name + ".data", 0);
-        getYml().addDefault("map-selector.menus.maps-menu.items." + name + ".name", itemName);
-        getYml().addDefault("map-selector.menus.maps-menu.items." + name + ".lore", itemLore);
-        getYml().addDefault("map-selector.menus.maps-menu.items." + name + ".enchanted", false);
+    private void addSecondGuiItem(String name, int slot, XMaterial material, String itemName, List<String> itemLore) {
+        new ItemBuilder(material).setName(itemName).setLore(itemLore).setSlot(slot).saveIntoConfig("map-selector.menus.maps-menu.items." + name, this);
     }
 
-    public void addSelectionsType(YamlConfiguration yml, String name, String permission, int uses, boolean unlimited) {
-        yml.addDefault("map-selector.selections.selections." + name + ".permission", permission);
-        yml.addDefault("map-selector.selections.selections." + name + ".daily-uses", uses);
-        yml.addDefault("map-selector.selections.selections." + name + ".unlimited", unlimited);
+    private void addSelectionsType(YamlConfiguration yml, String name, String permission, int uses, boolean unlimited) {
+        String path = "map-selector.selections.selections." + name + ".";
+
+        yml.addDefault(path + "permission", permission);
+        yml.addDefault(path + "daily-uses", uses);
+        yml.addDefault(path + "unlimited", unlimited);
     }
 }

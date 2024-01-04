@@ -1,24 +1,21 @@
-/*
- *
- */
-
 package me.leoo.bedwars.mapselector.configuration;
 
 import me.leoo.bedwars.mapselector.MapSelector;
+import me.leoo.utils.bukkit.config.ConfigManager;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 public class CacheConfig extends ConfigManager {
 
-    public CacheConfig(Plugin plugin, String name, String directory) {
-        super(plugin, name, directory);
+    public CacheConfig(String name, String directory) {
+        super(name, directory);
 
         YamlConfiguration yml = getYml();
 
-        yml.options().header(MapSelector.getPlugin().getDescription().getName() + " v" + MapSelector.getPlugin().getDescription().getVersion() + " made by " + MapSelector.getPlugin().getDescription().getAuthors() + ".\n" +
-                "Dependencies: " + MapSelector.getPlugin().getDescription().getDepend() + ".\n" +
-                "SoftDependencies: " + MapSelector.getPlugin().getDescription().getSoftDepend() + ".\n" +
-                "Join my discord for support: https://discord.gg/dtwanz4GQg\n");
+        yml.options().header(MapSelector.get().getDescription().getName() + " v" + MapSelector.get().getDescription().getVersion() + " made by " + MapSelector.get().getDescription().getAuthors() + ".\n" +
+                "Dependencies: " + MapSelector.get().getDescription().getDepend() + ".\n" +
+                "SoftDependencies: " + MapSelector.get().getDescription().getSoftDepend() + ".\n" +
+                "Join my discord for support: https://pixelstudios.dev/discord\n"
+        );
 
         yml.options().copyDefaults(true);
 
