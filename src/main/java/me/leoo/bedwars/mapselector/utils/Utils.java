@@ -1,7 +1,3 @@
-/*
- *
- */
-
 package me.leoo.bedwars.mapselector.utils;
 
 import com.andrei1058.bedwars.BedWars;
@@ -27,16 +23,16 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class Misc {
+public class Utils {
 
     public static String getSelectionsType(Player player) {
         String type = String.valueOf(0);
-        for (String s : MapSelector.getPlugin().getMainConfig().getYml().getConfigurationSection("map-selector.selections.selections").getKeys(false)) {
-            if (player.hasPermission(MapSelector.getPlugin().getMainConfig().getString("map-selector.selections.selections." + s + ".permission"))) {
-                if (MapSelector.getPlugin().getMainConfig().getBoolean("map-selector.selections.selections." + s + ".unlimited")) {
-                    type = MapSelector.getPlugin().getMainConfig().getString("map-selector.selections.unlimited-message");
+        for (String s : MapSelector.get().getMainConfig().getYml().getConfigurationSection("map-selector.selections.selections").getKeys(false)) {
+            if (player.hasPermission(MapSelector.get().getMainConfig().getString("map-selector.selections.selections." + s + ".permission"))) {
+                if (MapSelector.get().getMainConfig().getBoolean("map-selector.selections.selections." + s + ".unlimited")) {
+                    type = MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message");
                 } else {
-                    type = String.valueOf(MapSelector.getPlugin().getMainConfig().getInt("map-selector.selections.selections." + s + ".daily-uses"));
+                    type = String.valueOf(MapSelector.get().getMainConfig().getInt("map-selector.selections.selections." + s + ".daily-uses"));
                 }
             }
         }
@@ -44,7 +40,7 @@ public class Misc {
     }
 
     public static void joinRandomGroup(Player player, String group, boolean unlimited, boolean favorite) {
-        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.PROXY)) {
+        if (MapSelector.get().getBedwarsMode().equals(BedwarsMode.PROXY)) {
             List<CachedArena> arenas = new ArrayList<>();
             List<CachedArena> arenas1;
 
@@ -52,10 +48,10 @@ public class Misc {
 
             if (favorite) {
                 arenas1 = new ArrayList<>(Yaml.getFavoritesBungee(player, group));
-                noMapsMessage = MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.no-favorites-maps");
+                noMapsMessage = MapSelector.get().getMainConfig().getString("map-selector.messages.no-favorites-maps");
             } else {
                 arenas1 = new ArrayList<>(ArenaManager.getArenas());
-                noMapsMessage = MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.no-maps");
+                noMapsMessage = MapSelector.get().getMainConfig().getString("map-selector.messages.no-maps");
             }
 
             for (CachedArena cachedArena : arenas1) {
@@ -82,10 +78,10 @@ public class Misc {
 
             if (favorite) {
                 arenas1 = new ArrayList<>(Yaml.getFavorites(player, group));
-                noMapsMessage = MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.no-favorites-maps");
+                noMapsMessage = MapSelector.get().getMainConfig().getString("map-selector.messages.no-favorites-maps");
             } else {
                 arenas1 = new ArrayList<>(Arena.getArenas());
-                noMapsMessage = MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.no-maps");
+                noMapsMessage = MapSelector.get().getMainConfig().getString("map-selector.messages.no-maps");
             }
 
             for (IArena iArena : arenas1) {
@@ -108,7 +104,7 @@ public class Misc {
     }
 
     public static void joinArena(Player player, String name, String group, boolean unlimited) {
-        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.PROXY)) {
+        if (MapSelector.get().getBedwarsMode().equals(BedwarsMode.PROXY)) {
             List<CachedArena> arenas = new ArrayList<>();
 
             for (CachedArena cachedArena : ArenaManager.getArenas()) {
@@ -121,13 +117,13 @@ public class Misc {
             }
 
             if (arenas.isEmpty()) {
-                player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.no-maps"));
+                player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.no-maps"));
                 return;
             }
 
             if (BedWarsProxy.getParty().hasParty(player.getUniqueId()) && BedWarsProxy.getParty().getMembers(player.getUniqueId()).size() > 1) {
                 if (!BedWarsProxy.getParty().isOwner(player.getUniqueId())) {
-                    player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.not-party-leader"));
+                    player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.not-party-leader"));
                     return;
                 }
                 for (UUID uuid : BedWarsProxy.getParty().getMembers(player.getUniqueId())) {
@@ -150,13 +146,13 @@ public class Misc {
             }
 
             if (arenas.isEmpty()) {
-                player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.no-maps"));
+                player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.no-maps"));
                 return;
             }
 
             if (BedWars.getParty().hasParty(player) && BedWars.getParty().getMembers(player).size() > 1) {
                 if (!BedWars.getParty().isOwner(player)) {
-                    player.sendMessage(MapSelector.getPlugin().getMainConfig().getString("map-selector.messages.not-party-leader"));
+                    player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.not-party-leader"));
                     return;
                 }
                 for (Player player1 : BedWars.getParty().getMembers(player)) {
@@ -170,15 +166,15 @@ public class Misc {
         Yaml.addMapJoin(player, name);
 
         if (!unlimited) {
-            MapSelector.getPlugin().getMapSelectorDatabase().setPlayerUses(player.getUniqueId(), MapSelector.getPlugin().getMapSelectorDatabase().getPlayerUses(player.getUniqueId()) + 1);
+            MapSelector.get().getDatabaseManager().setPlayerUses(player.getUniqueId(), MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId()) + 1);
         }
     }
 
     public static void checkDate() {
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        if (day != MapSelector.getPlugin().getMainConfig().getInt("map-selector.last-date")) {
-            MapSelector.getPlugin().getMapSelectorDatabase().setAllPlayersUses(0);
-            MapSelector.getPlugin().getMainConfig().set("map-selector.last-date", day);
+        if (day != MapSelector.get().getMainConfig().getInt("map-selector.last-date")) {
+            MapSelector.get().getDatabaseManager().setAllPlayersUses(0);
+            MapSelector.get().getMainConfig().set("map-selector.last-date", day);
         }
     }
 
@@ -188,19 +184,19 @@ public class Misc {
         }
 
         ItemStack itemStack;
-        if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
+        if (MapSelector.get().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
             itemStack = BedWars.nms.createItemStack(material, 1, (short) data);
-            if(itemStack == null){
+            if (itemStack == null) {
                 itemStack = BedWars.nms.createItemStack("STONE", 1, (short) data);
             }
         } else {
             itemStack = BedWarsProxy.getItemAdapter().createItem(material, 1, (byte) data);
-            if(itemStack == null){
+            if (itemStack == null) {
                 itemStack = BedWarsProxy.getItemAdapter().createItem("STONE", 1, (byte) data);
             }
         }
 
-        if(itemStack != null) {
+        if (itemStack != null) {
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setDisplayName(displayName);
             itemMeta.setLore(lore);
@@ -216,14 +212,15 @@ public class Misc {
                     Field field = skullMeta.getClass().getDeclaredField("profile");
                     field.setAccessible(true);
                     field.set(skullMeta, profile);
-                } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException exception) {
+                } catch (IllegalArgumentException | NoSuchFieldException | SecurityException |
+                         IllegalAccessException exception) {
                     exception.printStackTrace();
                     return null;
                 }
                 itemStack.setItemMeta(skullMeta);
             }
 
-            if (MapSelector.getPlugin().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
+            if (MapSelector.get().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
                 itemStack = BedWars.nms.setTag(itemStack, "n1", n1 == null ? "" : n1);
                 itemStack = BedWars.nms.setTag(itemStack, "n2", n2 == null ? "" : n2);
                 itemStack = BedWars.nms.setTag(itemStack, "n3", n3 == null ? "" : n3);

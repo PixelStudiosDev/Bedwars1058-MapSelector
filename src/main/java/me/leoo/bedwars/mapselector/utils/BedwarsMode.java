@@ -1,19 +1,12 @@
-/*
- *
- */
-
 package me.leoo.bedwars.mapselector.utils;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum BedwarsMode {
-	BEDWARS("BedWars1058"), PROXY("BedWarsProxy");
+    BEDWARS("BedWars1058"), PROXY("BedWarsProxy");
 
-	private final String name;
-
-	BedwarsMode(String name){
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
+    private final String name;
 }

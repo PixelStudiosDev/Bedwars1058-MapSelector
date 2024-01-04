@@ -1,7 +1,3 @@
-/*
- *
- */
-
 package me.leoo.bedwars.mapselector.listeners;
 
 import me.leoo.bedwars.mapselector.MapSelector;
@@ -18,6 +14,6 @@ public class JoinListener implements Listener {
         Player player = event.getPlayer();
 
         Yaml.checkStored(player);
-        MapSelector.getPlugin().getMapSelectorDatabase().checkStored(player.getUniqueId());
+        MapSelector.get().getDatabaseManager().checkStored(player.getUniqueId());
     }
 }
