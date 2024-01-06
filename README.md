@@ -24,11 +24,11 @@ For compiling the code you will need my utils dependency.
 </repositories>
 ```
 ```xml
-	<dependency>
-	    <groupId>com.github.leo18bernese</groupId>
-	    <artifactId>Utils</artifactId>
-	    <version>Tag</version>
-	</dependency>
+<dependency>
+    <groupId>com.github.leo18bernese</groupId>
+    <artifactId>Utils</artifactId>
+    <version>Tag</version>
+</dependency>
 ```
 ### Gradle
 ```groovy
