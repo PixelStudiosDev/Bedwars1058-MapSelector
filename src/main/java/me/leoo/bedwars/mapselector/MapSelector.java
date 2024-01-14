@@ -57,7 +57,7 @@ public class MapSelector extends JavaPlugin {
 
         databaseManager = new DatabaseManager();
 
-        if (getPluginManager().getPlugin("PlaceholderAPI").isEnabled()) {
+        if (getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderAPI().register();
         }
 
