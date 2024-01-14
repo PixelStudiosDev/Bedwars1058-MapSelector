@@ -69,7 +69,7 @@ public class SelectorMenu extends MenuBuilder {
 
                                 break;
                             case "rejoin":
-                                player.performCommand("bw rejoin");
+                                player.performCommand("rejoin");
 
                                 break;
                         }
