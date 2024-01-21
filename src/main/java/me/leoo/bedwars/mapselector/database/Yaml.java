@@ -6,6 +6,7 @@ import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.proxy.api.ArenaStatus;
 import com.andrei1058.bedwars.proxy.api.CachedArena;
 import com.andrei1058.bedwars.proxy.arenamanager.ArenaManager;
+import lombok.experimental.UtilityClass;
 import me.leoo.bedwars.mapselector.MapSelector;
 import org.bukkit.entity.Player;
 
@@ -13,39 +14,40 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@UtilityClass
 public class Yaml {
 
-    public static void storePlayer(Player player) {
+    public void storePlayer(Player player) {
         MapSelector.get().getCacheConfig().set(player.getUniqueId() + ".favorite-maps", Collections.emptyList());
         MapSelector.get().getCacheConfig().set(player.getUniqueId() + ".per-map-times-joined", Collections.emptyList());
     }
 
-    public static boolean isStoredPlayer(Player player) {
+    public boolean isStoredPlayer(Player player) {
         return MapSelector.get().getCacheConfig().getYml().contains(String.valueOf(player.getUniqueId()));
     }
 
-    public static void checkStored(Player player) {
+    public void checkStored(Player player) {
         if (!isStoredPlayer(player)) {
             storePlayer(player);
         }
     }
 
-    public static boolean isFavorite(Player player, String map) {
+    public boolean isFavorite(Player player, String map) {
         checkStored(player);
         return MapSelector.get().getCacheConfig().getYml().getBoolean(player.getUniqueId() + ".favorite-maps." + map);
     }
 
-    public static void setFavorite(Player player, String map) {
+    public void setFavorite(Player player, String map) {
         checkStored(player);
         MapSelector.get().getCacheConfig().set(player.getUniqueId() + ".favorite-maps." + map, Boolean.TRUE);
     }
 
-    public static void unsetFavorite(Player player, String map) {
+    public void unsetFavorite(Player player, String map) {
         checkStored(player);
         MapSelector.get().getCacheConfig().set(player.getUniqueId() + ".favorite-maps." + map, Boolean.FALSE);
     }
 
-    public static List<IArena> getFavorites(Player player, String group) {
+    public List<IArena> getFavorites(Player player, String group) {
         checkStored(player);
         List<IArena> favoriteMaps = new ArrayList<>();
         for (IArena arena : Arena.getArenas()) {
@@ -56,7 +58,7 @@ public class Yaml {
         return favoriteMaps;
     }
 
-    public static List<CachedArena> getFavoritesBungee(Player player, String group) {
+    public List<CachedArena> getFavoritesBungee(Player player, String group) {
         checkStored(player);
         List<CachedArena> favoriteMaps = new ArrayList<>();
         for (CachedArena arena : ArenaManager.getArenas()) {
@@ -67,12 +69,12 @@ public class Yaml {
         return favoriteMaps;
     }
 
-    public static void addMapJoin(Player player, String map) {
+    public void addMapJoin(Player player, String map) {
         checkStored(player);
         MapSelector.get().getCacheConfig().set(player.getUniqueId() + ".per-map-times-joined." + map, MapSelector.get().getCacheConfig().getInt(player.getUniqueId() + ".per-map-times-joined." + map) + 1);
     }
 
-    public static int getMapJoins(Player player, String map) {
+    public int getMapJoins(Player player, String map) {
         checkStored(player);
         return MapSelector.get().getCacheConfig().getInt(player.getUniqueId() + ".per-map-times-joined." + map);
     }

@@ -8,24 +8,18 @@ import com.andrei1058.bedwars.proxy.BedWarsProxy;
 import com.andrei1058.bedwars.proxy.api.ArenaStatus;
 import com.andrei1058.bedwars.proxy.api.CachedArena;
 import com.andrei1058.bedwars.proxy.arenamanager.ArenaManager;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+import lombok.experimental.UtilityClass;
 import me.leoo.bedwars.mapselector.MapSelector;
 import me.leoo.bedwars.mapselector.database.Yaml;
 import org.bukkit.Bukkit;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
+@UtilityClass
 public class Utils {
 
-    public static String getSelectionsType(Player player) {
+    public String getSelectionsType(Player player) {
         String type = String.valueOf(0);
         for (String s : MapSelector.get().getMainConfig().getYml().getConfigurationSection("map-selector.selections.selections").getKeys(false)) {
             if (player.hasPermission(MapSelector.get().getMainConfig().getString("map-selector.selections.selections." + s + ".permission"))) {
@@ -39,7 +33,7 @@ public class Utils {
         return type;
     }
 
-    public static void joinRandomGroup(Player player, String group, boolean unlimited, boolean favorite) {
+    public void joinRandomGroup(Player player, String group, boolean unlimited, boolean favorite) {
         if (MapSelector.get().getBedwarsMode().equals(BedwarsMode.PROXY)) {
             List<CachedArena> arenas = new ArrayList<>();
             List<CachedArena> arenas1;
@@ -103,7 +97,7 @@ public class Utils {
         }
     }
 
-    public static void joinArena(Player player, String name, String group, boolean unlimited) {
+    public void joinArena(Player player, String name, String group, boolean unlimited) {
         if (MapSelector.get().getBedwarsMode().equals(BedwarsMode.PROXY)) {
             List<CachedArena> arenas = new ArrayList<>();
 
@@ -170,71 +164,11 @@ public class Utils {
         }
     }
 
-    public static void checkDate() {
+    public void checkDate() {
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         if (day != MapSelector.get().getMainConfig().getInt("map-selector.last-date")) {
             MapSelector.get().getDatabaseManager().setAllPlayersUses(0);
             MapSelector.get().getMainConfig().set("map-selector.last-date", day);
         }
-    }
-
-    public static ItemStack item(String material, String headUrl, int data, String displayName, List<String> lore, boolean enchanted, String n1, String n2, String n3, String n4, String n5) {
-        if (material.equals("WOOL")) {
-            data = new Random().nextInt(16);
-        }
-
-        ItemStack itemStack;
-        if (MapSelector.get().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
-            itemStack = BedWars.nms.createItemStack(material, 1, (short) data);
-            if (itemStack == null) {
-                itemStack = BedWars.nms.createItemStack("STONE", 1, (short) data);
-            }
-        } else {
-            itemStack = BedWarsProxy.getItemAdapter().createItem(material, 1, (byte) data);
-            if (itemStack == null) {
-                itemStack = BedWarsProxy.getItemAdapter().createItem("STONE", 1, (byte) data);
-            }
-        }
-
-        if (itemStack != null) {
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName(displayName);
-            itemMeta.setLore(lore);
-            if (enchanted) itemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-            itemStack.setItemMeta(itemMeta);
-
-            if (material.equals("SKULL_ITEM") && headUrl != null) {
-                SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
-                GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-                profile.getProperties().put("textures", new Property("textures", headUrl));
-                try {
-                    Field field = skullMeta.getClass().getDeclaredField("profile");
-                    field.setAccessible(true);
-                    field.set(skullMeta, profile);
-                } catch (IllegalArgumentException | NoSuchFieldException | SecurityException |
-                         IllegalAccessException exception) {
-                    exception.printStackTrace();
-                    return null;
-                }
-                itemStack.setItemMeta(skullMeta);
-            }
-
-            if (MapSelector.get().getBedwarsMode().equals(BedwarsMode.BEDWARS)) {
-                itemStack = BedWars.nms.setTag(itemStack, "n1", n1 == null ? "" : n1);
-                itemStack = BedWars.nms.setTag(itemStack, "n2", n2 == null ? "" : n2);
-                itemStack = BedWars.nms.setTag(itemStack, "n3", n3 == null ? "" : n3);
-                itemStack = BedWars.nms.setTag(itemStack, "n4", n4 == null ? "" : n4);
-                itemStack = BedWars.nms.setTag(itemStack, "n5", n5 == null ? "" : n5);
-            } else {
-                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n1", n1 == null ? "" : n1);
-                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n2", n2 == null ? "" : n2);
-                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n3", n3 == null ? "" : n3);
-                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n4", n4 == null ? "" : n4);
-                itemStack = BedWarsProxy.getItemAdapter().addTag(itemStack, "n5", n5 == null ? "" : n5);
-            }
-        }
-
-        return itemStack;
     }
 }
