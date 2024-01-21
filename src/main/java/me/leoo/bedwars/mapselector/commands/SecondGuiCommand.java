@@ -28,6 +28,7 @@ public class SecondGuiCommand extends Command {
 
                     if (args.length != 1) {
                         player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.open.missing2"));
+                        return;
                     }
 
                     String group = args[0];
