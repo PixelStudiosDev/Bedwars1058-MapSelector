@@ -176,7 +176,6 @@ public class ArenasMenu extends PaginatedMenuBuilder {
         //other
         boolean unlimited = Utils.getSelectionsType(player).equals(MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message"));
 
-
         for (String key : config.getSection("map-selector.menus.maps-menu.items")) {
             if (key.startsWith("map") || key.contains("page")) continue;
 
@@ -221,12 +220,12 @@ public class ArenasMenu extends PaginatedMenuBuilder {
     @Override
     public ItemBuilder getNextPageItem(Player player) {
         return ItemBuilder.parseFromConfig("map-selector.menus.maps-menu.items.next-page", config)
-                .addReplacement("{page}", String.valueOf(getPage() + 1));
+                .addReplacement("{nextPage}", String.valueOf(getPage() + 1));
     }
 
     @Override
     public ItemBuilder getPreviousPageItem(Player player) {
         return ItemBuilder.parseFromConfig("map-selector.menus.maps-menu.items.previous-page", config)
-                .addReplacement("{page}", String.valueOf(getPage() - 2));
+                .addReplacement("{previousPage}", String.valueOf(getPage() - 1));
     }
 }

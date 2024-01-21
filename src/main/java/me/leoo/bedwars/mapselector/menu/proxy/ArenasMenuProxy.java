@@ -224,12 +224,12 @@ public class ArenasMenuProxy extends PaginatedMenuBuilder {
     @Override
     public ItemBuilder getNextPageItem(Player player) {
         return ItemBuilder.parseFromConfig("map-selector.menus.maps-menu.items.next-page", config)
-                .addReplacement("{page}", String.valueOf(getPage() + 1));
+                .addReplacement("{nextPage}", String.valueOf(getPage() + 1));
     }
 
     @Override
     public ItemBuilder getPreviousPageItem(Player player) {
         return ItemBuilder.parseFromConfig("map-selector.menus.maps-menu.items.previous-page", config)
-                .addReplacement("{page}", String.valueOf(getPage() - 2));
+                .addReplacement("{previousPage}", String.valueOf(getPage() - 1));
     }
 }
