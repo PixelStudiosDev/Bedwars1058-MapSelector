@@ -35,14 +35,14 @@ public class SelectorMenuProxy extends MenuBuilder {
     private final ConfigManager config = MapSelector.get().getMainConfig();
     private final String group;
 
-    public SelectorMenuProxy(String group) {
-        super(MapSelector.get().getMainConfig().getInt("map-selector.menus.bedwars-menu.slots") / 9);
+    public SelectorMenuProxy(Player player, String group) {
+        super(player, MapSelector.get().getMainConfig().getInt("map-selector.menus.bedwars-menu.slots") / 9);
 
         this.group = group;
     }
 
     @Override
-    public List<ItemBuilder> getItems(Player player) {
+    public List<ItemBuilder> getItems() {
         List<ItemBuilder> items = new ArrayList<>();
 
         String displayGroup = group;
@@ -51,9 +51,9 @@ public class SelectorMenuProxy extends MenuBuilder {
         }
 
         for (String key : config.getSection("map-selector.menus.bedwars-menu.items")) {
-            items.add(ItemBuilder.parseFromConfig("map-selector.menus.bedwars-menu.items." + key, config)
+            items.add(ItemBuilder.parse("map-selector.menus.bedwars-menu.items." + key, config)
                     .addReplacement("{groupName}", displayGroup)
-                    .setEventCallback(event -> {
+                    .event(event -> {
                         switch (key) {
                             case "join-random":
                                 Utils.joinRandomGroup(player, group, false, false);
@@ -61,7 +61,7 @@ public class SelectorMenuProxy extends MenuBuilder {
 
                                 break;
                             case "map-selector":
-                                new ArenasMenuProxy(group).open(player);
+                                new ArenasMenuProxy(player, group).open();
 
                                 break;
                             case "close":
@@ -84,7 +84,7 @@ public class SelectorMenuProxy extends MenuBuilder {
     }
 
     @Override
-    public String getTitle(Player player) {
+    public String getTitle() {
         return config.getString("map-selector.menus.bedwars-menu.title");
     }
 }

@@ -62,7 +62,7 @@ public class MapSelector extends JavaPlugin {
         }
 
         Events.register(new JoinListener());
-        CommandManager.registerCommands(new FirstGuiCommand(), new SecondGuiCommand(), new MainCommand());
+        CommandManager.register(new FirstGuiCommand(), new SecondGuiCommand(), new MainCommand());
 
         getLogger().info(getDescription().getName() + " plugin by itz_leoo has been successfully enabled.");
     }

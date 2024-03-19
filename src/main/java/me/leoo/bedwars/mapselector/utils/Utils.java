@@ -20,17 +20,17 @@ import java.util.*;
 public class Utils {
 
     public String getSelectionsType(Player player) {
-        String type = String.valueOf(0);
         for (String s : MapSelector.get().getMainConfig().getYml().getConfigurationSection("map-selector.selections.selections").getKeys(false)) {
             if (player.hasPermission(MapSelector.get().getMainConfig().getString("map-selector.selections.selections." + s + ".permission"))) {
                 if (MapSelector.get().getMainConfig().getBoolean("map-selector.selections.selections." + s + ".unlimited")) {
-                    type = MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message");
+                   return MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message");
                 } else {
-                    type = String.valueOf(MapSelector.get().getMainConfig().getInt("map-selector.selections.selections." + s + ".daily-uses"));
+                   return String.valueOf(MapSelector.get().getMainConfig().getInt("map-selector.selections.selections." + s + ".daily-uses"));
                 }
             }
         }
-        return type;
+
+        return "0";
     }
 
     public void joinRandomGroup(Player player, String group, boolean unlimited, boolean favorite) {

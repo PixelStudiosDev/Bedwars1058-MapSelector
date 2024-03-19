@@ -46,7 +46,7 @@ public class FirstGuiCommand extends Command {
                             }
                         }
 
-                        new SelectorMenuProxy(group).open(player);
+                        new SelectorMenuProxy(player, group).open();
                     } else {
 
                         for (IArena arena : Arena.getArenas()) {
@@ -62,7 +62,7 @@ public class FirstGuiCommand extends Command {
                             }
                         }
 
-                        new SelectorMenu(group).open(player);
+                        new SelectorMenu(player, group).open();
                     }
                 })
                 .setTabComplete((commandSender, args) -> {
