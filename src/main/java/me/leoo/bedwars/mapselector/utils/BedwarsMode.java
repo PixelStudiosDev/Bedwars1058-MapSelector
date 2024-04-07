@@ -9,4 +9,8 @@ public enum BedwarsMode {
     BEDWARS("BedWars1058"), PROXY("BedWarsProxy");
 
     private final String name;
+
+    public String getPath() {
+        return "plugins/" + name + "/Addons/MapSelector";
+    }
 }

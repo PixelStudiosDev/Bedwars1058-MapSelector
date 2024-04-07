@@ -51,9 +51,8 @@ public class MapSelector extends JavaPlugin {
             return;
         }
 
-        String directory = "plugins/" + bedwarsMode.getName() + "/Addons/MapSelector";
-        mainConfig = new MainConfig("config", directory);
-        cacheConfig = new CacheConfig("cache", directory);
+        mainConfig = new MainConfig("config", bedwarsMode.getPath());
+        cacheConfig = new CacheConfig("cache", bedwarsMode.getPath());
 
         databaseManager = new DatabaseManager();
 
