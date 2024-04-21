@@ -1,7 +1,7 @@
 ![Static Badge](https://img.shields.io/badge/Docs-leo18bernese.gitbook.io-red?link=https%3A%2F%2Fleo18bernese.gitbook.io%2Fbedwars1058-mapselector%2F)
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/PixelStudiosDev/Bedwars1058-MapSelector)
 
-![JitPack](https://img.shields.io/jitpack/version/com.github.leo18bernese/Utils?label=Utils)
+![JitPack](https://img.shields.io/github/v/release/leo18bernese/Utils)
 
 # Bedwars1058-MapSelector
 
