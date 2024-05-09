@@ -35,21 +35,7 @@ public class MapSelector extends JavaPlugin {
 
         Utils.initialize(this);
 
-        for (BedwarsMode mode : BedwarsMode.values()) {
-            if (getPluginManager().isPluginEnabled(mode.getName())) {
-                bedwarsMode = mode;
-
-                getLogger().info("Hooked into " + mode.getName());
-            }
-        }
-
-        if (bedwarsMode == null) {
-            getLogger().info("Bedwars1058/BedwarsProxy not found. Disabling...");
-
-            getPluginManager().disablePlugin(this);
-
-            return;
-        }
+        bedwarsMode = BedwarsMode.init(this);
 
         mainConfig = new MainConfig("config", bedwarsMode.getPath());
         cacheConfig = new CacheConfig("cache", bedwarsMode.getPath());

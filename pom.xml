@@ -70,7 +70,7 @@
         <dependency>
             <groupId>me.leoo.utils</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.7.12</version>
+            <version>1.7.17</version>
         </dependency>
     </dependencies>
 

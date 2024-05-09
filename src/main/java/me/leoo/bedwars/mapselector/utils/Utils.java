@@ -23,9 +23,9 @@ public class Utils {
         for (String s : MapSelector.get().getMainConfig().getYml().getConfigurationSection("map-selector.selections.selections").getKeys(false)) {
             if (player.hasPermission(MapSelector.get().getMainConfig().getString("map-selector.selections.selections." + s + ".permission"))) {
                 if (MapSelector.get().getMainConfig().getBoolean("map-selector.selections.selections." + s + ".unlimited")) {
-                   return MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message");
+                    return MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message");
                 } else {
-                   return String.valueOf(MapSelector.get().getMainConfig().getInt("map-selector.selections.selections." + s + ".daily-uses"));
+                    return String.valueOf(MapSelector.get().getMainConfig().getInt("map-selector.selections.selections." + s + ".daily-uses"));
                 }
             }
         }

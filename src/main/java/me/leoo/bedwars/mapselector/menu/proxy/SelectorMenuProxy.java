@@ -32,7 +32,7 @@ import java.util.List;
 
 public class SelectorMenuProxy extends MenuBuilder {
 
-    private final ConfigManager config = MapSelector.get().getMainConfig();
+    private final ConfigManager CONFIG = MapSelector.get().getMainConfig();
     private final String group;
 
     public SelectorMenuProxy(Player player, String group) {
@@ -50,8 +50,8 @@ public class SelectorMenuProxy extends MenuBuilder {
             displayGroup = LanguageManager.get().getPlayerLanguage(player).getMsg(Messages.ARENA_DISPLAY_GROUP_PATH + group.toLowerCase());
         }
 
-        for (String key : config.getSection("map-selector.menus.bedwars-menu.items")) {
-            items.add(ItemBuilder.parse("map-selector.menus.bedwars-menu.items." + key, config)
+        for (String key : CONFIG.getKeys("map-selector.menus.bedwars-menu.items")) {
+            items.add(ItemBuilder.parse("map-selector.menus.bedwars-menu.items." + key, CONFIG)
                     .addReplacement("{groupName}", displayGroup)
                     .event(event -> {
                         switch (key) {
@@ -85,6 +85,6 @@ public class SelectorMenuProxy extends MenuBuilder {
 
     @Override
     public String getTitle() {
-        return config.getString("map-selector.menus.bedwars-menu.title");
+        return CONFIG.getString("map-selector.menus.bedwars-menu.title");
     }
 }

@@ -38,10 +38,11 @@ import java.util.List;
 
 public class ArenasMenu extends PaginatedMenuBuilder {
 
-    private final ConfigManager config = MapSelector.get().getMainConfig();
     private final String group;
 
-    public ArenasMenu(Player player,String group) {
+    private final ConfigManager CONFIG = MapSelector.get().getMainConfig();
+
+    public ArenasMenu(Player player, String group) {
         super(player, MapSelector.get().getMainConfig().getInt("map-selector.menus.maps-menu.slots") / 9);
 
         this.group = group;
@@ -49,12 +50,12 @@ public class ArenasMenu extends PaginatedMenuBuilder {
 
     @Override
     public List<Integer> getPaginatedSlots() {
-        return config.getIntegerSplit("map-selector.menus.maps-menu.maps-slots");
+        return CONFIG.getIntegerSplit("map-selector.menus.maps-menu.maps-slots");
     }
 
     @Override
     public String getPaginationTitle() {
-        return config.getString("map-selector.menus.maps-menu.title");
+        return CONFIG.getString("map-selector.menus.maps-menu.title");
     }
 
     @Override
@@ -111,7 +112,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
                 }
             }
 
-            items.add(ItemBuilder.parse("map-selector.menus.maps-menu.items." + path, config)
+            items.add(ItemBuilder.parse("map-selector.menus.maps-menu.items." + path, CONFIG)
                     .addReplacement("{mapName}", arena.getDisplayName())
                     .addReplacement("{groupName}", displayGroup)
                     .addReplacement("{availableGames}", "1")
@@ -176,10 +177,10 @@ public class ArenasMenu extends PaginatedMenuBuilder {
         //other
         boolean unlimited = Utils.getSelectionsType(player).equals(MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message"));
 
-        for (String key : config.getSection("map-selector.menus.maps-menu.items")) {
+        for (String key : CONFIG.getKeys("map-selector.menus.maps-menu.items")) {
             if (key.startsWith("map") || key.contains("page")) continue;
 
-            items.add(ItemBuilder.parse("map-selector.menus.maps-menu.items." + key, config)
+            items.add(ItemBuilder.parse("map-selector.menus.maps-menu.items." + key, CONFIG)
                     .addReplacement("{groupName}", displayGroup)
                     .addReplacement("{selectionsType}", Utils.getSelectionsType(player))
                     .addReplacement("{remainingUses}", unlimited ? MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Utils.getSelectionsType(player)) - MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId())))
@@ -219,13 +220,13 @@ public class ArenasMenu extends PaginatedMenuBuilder {
 
     @Override
     public ItemBuilder getNextPageItem() {
-        return ItemBuilder.parse("map-selector.menus.maps-menu.items.next-page", config)
+        return ItemBuilder.parse("map-selector.menus.maps-menu.items.next-page", CONFIG)
                 .addReplacement("{nextPage}", String.valueOf(getPage() + 1));
     }
 
     @Override
     public ItemBuilder getPreviousPageItem() {
-        return ItemBuilder.parse("map-selector.menus.maps-menu.items.previous-page", config)
+        return ItemBuilder.parse("map-selector.menus.maps-menu.items.previous-page", CONFIG)
                 .addReplacement("{previousPage}", String.valueOf(getPage() - 1));
     }
 }

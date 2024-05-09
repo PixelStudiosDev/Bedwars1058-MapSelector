@@ -32,8 +32,9 @@ import java.util.List;
 
 public class SelectorMenu extends MenuBuilder {
 
-    private final ConfigManager config = MapSelector.get().getMainConfig();
     private final String group;
+
+    private final ConfigManager CONFIG = MapSelector.get().getMainConfig();
 
     public SelectorMenu(Player player, String group) {
         super(player, MapSelector.get().getMainConfig().getInt("map-selector.menus.bedwars-menu.slots") / 9);
@@ -50,8 +51,8 @@ public class SelectorMenu extends MenuBuilder {
             displayGroup = Language.getPlayerLanguage(player).m(Messages.ARENA_DISPLAY_GROUP_PATH + group.toLowerCase());
         }
 
-        for (String key : config.getSection("map-selector.menus.bedwars-menu.items")) {
-            items.add(ItemBuilder.parse("map-selector.menus.bedwars-menu.items." + key, config)
+        for (String key : CONFIG.getKeys("map-selector.menus.bedwars-menu.items")) {
+            items.add(ItemBuilder.parse("map-selector.menus.bedwars-menu.items." + key, CONFIG)
                     .addReplacement("{groupName}", displayGroup)
                     .event(event -> {
                         switch (key) {
@@ -85,6 +86,6 @@ public class SelectorMenu extends MenuBuilder {
 
     @Override
     public String getTitle() {
-        return config.getString("map-selector.menus.bedwars-menu.title");
+        return CONFIG.getString("map-selector.menus.bedwars-menu.title");
     }
 }

@@ -95,7 +95,7 @@ public class DatabaseManager {
         AtomicBoolean register = new AtomicBoolean(false);
 
         execute("SELECT uuid FROM map_selector WHERE uuid = ?", preparedStatement -> {
-            preparedStatement.setString(1, String.valueOf(uuid));
+            preparedStatement.setString(1, uuid.toString());
 
             register.set(preparedStatement.executeQuery().next());
         });
@@ -110,7 +110,7 @@ public class DatabaseManager {
      */
     public void register(UUID uuid) {
         execute("INSERT INTO map_selector (uuid, uses) VALUES(?, ?)", preparedStatement -> {
-            preparedStatement.setString(1, String.valueOf(uuid));
+            preparedStatement.setString(1, uuid.toString());
             preparedStatement.setInt(2, 0);
 
             preparedStatement.executeUpdate();
@@ -136,7 +136,7 @@ public class DatabaseManager {
     public void setPlayerUses(UUID uuid, int uses) {
         execute("UPDATE map_selector SET uses = ? WHERE uuid = ?", preparedStatement -> {
             preparedStatement.setInt(1, uses);
-            preparedStatement.setString(2, String.valueOf(uuid));
+            preparedStatement.setString(2, uuid.toString());
             preparedStatement.executeUpdate();
 
             MapSelector.get().debug("Set player's with uuid " + uuid + " uses to " + uses);
@@ -162,10 +162,10 @@ public class DatabaseManager {
      * @return the uses of the player
      */
     public int getPlayerUses(UUID uuid) {
-        AtomicInteger uses = new AtomicInteger();
+        AtomicInteger uses = new AtomicInteger(0);
 
         execute("SELECT uses FROM map_selector WHERE uuid = ?", preparedStatement -> {
-            preparedStatement.setString(1, String.valueOf(uuid));
+            preparedStatement.setString(1, uuid.toString());
 
             ResultSet resultSet = preparedStatement.executeQuery();
 

@@ -104,9 +104,9 @@ public class MainConfig extends ConfigManager {
                 "&7Each day you can choose which", "&7map you want to play 1 time.", "&7Unlock unlimited map selection!", "&7by upgrading to &bMVP&c+ &7rank", "&7on our store!", "", "&ehttps://store.myserver.net!");
 
         //selections settings
-        addSelectionsType(yml, "default", "bwselector.default", 3, false);
-        addSelectionsType(yml, "mvp+", "bwselector.mvp+", 0, true);
-        addSelectionsType(yml, "admin", "bwselector.admin", 0, true);
+        addSelectionsType("default", "bwselector.default", 3, false);
+        addSelectionsType("mvp+", "bwselector.mvp+", 0, true);
+        addSelectionsType("admin", "bwselector.admin", 0, true);
 
         yml.options().copyDefaults(true);
         save();
@@ -121,7 +121,7 @@ public class MainConfig extends ConfigManager {
         saveItem("map-selector.menus.maps-menu.items." + name, slot, material, itemName, itemLore);
     }
 
-    private void addSelectionsType(YamlConfiguration yml, String name, String permission, int uses, boolean unlimited) {
+    private void addSelectionsType(String name, String permission, int uses, boolean unlimited) {
         String path = "map-selector.selections.selections." + name + ".";
 
         add(path + "permission", permission);

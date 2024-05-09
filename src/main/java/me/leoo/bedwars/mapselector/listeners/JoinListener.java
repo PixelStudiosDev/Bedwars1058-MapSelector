@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class JoinListener implements Listener {
 
     @EventHandler
-    public void playerJoinEvent(PlayerJoinEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
         Yaml.checkStored(player);
