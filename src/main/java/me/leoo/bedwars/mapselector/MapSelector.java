@@ -40,7 +40,7 @@ public class MapSelector extends JavaPlugin {
         mainConfig = new MainConfig("config", bedwarsMode.getPath());
         cacheConfig = new CacheConfig("cache", bedwarsMode.getPath());
 
-        databaseManager = new DatabaseManager();
+        databaseManager = new DatabaseManager(mainConfig, bedwarsMode);
 
         if (getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderAPI().register();

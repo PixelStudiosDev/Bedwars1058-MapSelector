@@ -40,7 +40,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
 
     private final String group;
 
-    private final ConfigManager CONFIG = MapSelector.get().getMainConfig();
+    private static final ConfigManager CONFIG = MapSelector.get().getMainConfig();
 
     public ArenasMenu(Player player, String group) {
         super(player, MapSelector.get().getMainConfig().getInt("map-selector.menus.maps-menu.slots") / 9);

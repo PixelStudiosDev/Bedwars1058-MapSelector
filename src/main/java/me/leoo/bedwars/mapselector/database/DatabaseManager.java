@@ -24,9 +24,7 @@ public class DatabaseManager {
 
     private final HikariDataSource dataSource;
 
-    public DatabaseManager() {
-        ConfigManager config = MapSelector.get().getMainConfig();
-        BedwarsMode mode = MapSelector.get().getBedwarsMode();
+    public DatabaseManager(ConfigManager config, BedwarsMode mode) {
         HikariConfig hikariConfig = new HikariConfig();
 
         String storage = config.getString("map-selector.storage");

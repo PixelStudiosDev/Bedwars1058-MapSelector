@@ -34,7 +34,7 @@ public class SelectorMenu extends MenuBuilder {
 
     private final String group;
 
-    private final ConfigManager CONFIG = MapSelector.get().getMainConfig();
+    private static final ConfigManager CONFIG = MapSelector.get().getMainConfig();
 
     public SelectorMenu(Player player, String group) {
         super(player, MapSelector.get().getMainConfig().getInt("map-selector.menus.bedwars-menu.slots") / 9);

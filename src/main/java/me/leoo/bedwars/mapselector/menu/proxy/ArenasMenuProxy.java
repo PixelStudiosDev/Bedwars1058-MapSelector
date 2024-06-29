@@ -39,7 +39,7 @@ import java.util.List;
 
 public class ArenasMenuProxy extends PaginatedMenuBuilder {
 
-    private final ConfigManager CONFIG = MapSelector.get().getMainConfig();
+    private static final ConfigManager CONFIG = MapSelector.get().getMainConfig();
     private final String group;
 
     public ArenasMenuProxy(Player player, String group) {

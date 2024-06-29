@@ -32,7 +32,7 @@ import java.util.List;
 
 public class SelectorMenuProxy extends MenuBuilder {
 
-    private final ConfigManager CONFIG = MapSelector.get().getMainConfig();
+    private static final ConfigManager CONFIG = MapSelector.get().getMainConfig();
     private final String group;
 
     public SelectorMenuProxy(Player player, String group) {
