@@ -5,7 +5,8 @@
 
 # Bedwars1058-MapSelector
 
-### Download the plugin from: 
+### Download the plugin from:
+
 https://polymart.org/resource/bedwars1058-mapselector-addon.2776
 
 https://www.spigotmc.org/resources/bedwars1058-mapselector-addon.105289/
@@ -15,6 +16,7 @@ https://www.spigotmc.org/resources/bedwars1058-mapselector-addon.105289/
 For compiling the code you will need my utils dependency.
 
 ### Maven
+
 ```xml
 <repositories>
     <repository>
@@ -23,6 +25,7 @@ For compiling the code you will need my utils dependency.
     </repository>
 </repositories>
 ```
+
 ```xml
 <dependency>
     <groupId>com.github.leo18bernese</groupId>
@@ -30,12 +33,15 @@ For compiling the code you will need my utils dependency.
     <version>Tag</version>
 </dependency>
 ```
+
 ### Gradle
+
 ```groovy
 repositories {
     maven { url 'https://jitpack.io' }
 }
 ```
+
 ```groovy
 dependencies {
     implementation 'com.github.leo18bernese:Utils:Tag'
