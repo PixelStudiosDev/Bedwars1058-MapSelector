@@ -53,7 +53,7 @@ public class SelectorMenu extends MenuBuilder {
 
         for (String key : CONFIG.getKeys("map-selector.menus.bedwars-menu.items")) {
             items.add(ItemBuilder.parse("map-selector.menus.bedwars-menu.items." + key, CONFIG)
-                    .addReplacement("{groupName}", displayGroup)
+                    .replacement("{groupName}", displayGroup)
                     .event(event -> {
                         switch (key) {
                             case "join-random":

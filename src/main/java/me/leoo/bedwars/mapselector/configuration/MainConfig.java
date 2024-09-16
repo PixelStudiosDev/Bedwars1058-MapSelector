@@ -23,7 +23,8 @@ public class MainConfig extends ConfigManager {
                 "Storage methods: MySQL / SQLite.\n");
 
         //settings
-        add("map-selector.debug", Boolean.FALSE);
+        add("map-selector.debug", false);
+        add("map-selector.update-checker", true);
         add("map-selector.storage", "SQLite");
         add("map-selector.last-date", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 

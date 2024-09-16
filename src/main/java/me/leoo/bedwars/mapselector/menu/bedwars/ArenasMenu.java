@@ -113,15 +113,15 @@ public class ArenasMenu extends PaginatedMenuBuilder {
             }
 
             items.add(ItemBuilder.parse("map-selector.menus.maps-menu.items." + path, CONFIG)
-                    .addReplacement("{mapName}", arena.getDisplayName())
-                    .addReplacement("{groupName}", displayGroup)
-                    .addReplacement("{availableGames}", "1")
-                    .addReplacement("{timesJoined}", String.valueOf(Yaml.getMapJoins(player, arena.getArenaName())))
-                    .addReplacement("{selectionsType}", Utils.getSelectionsType(player))
-                    .addReplacement("{remainingUses}", unlimited ? MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Utils.getSelectionsType(player)) - MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId())))
-                    .addReplacement("{status}", arena.getStatus().name())
-                    .addReplacement("{on}", String.valueOf(arena.getPlayers().size()))
-                    .addReplacement("{max}", String.valueOf(arena.getMaxPlayers()))
+                    .replacement("{mapName}", arena.getDisplayName())
+                    .replacement("{groupName}", displayGroup)
+                    .replacement("{availableGames}", "1")
+                    .replacement("{timesJoined}", String.valueOf(Yaml.getMapJoins(player, arena.getArenaName())))
+                    .replacement("{selectionsType}", Utils.getSelectionsType(player))
+                    .replacement("{remainingUses}", unlimited ? MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Utils.getSelectionsType(player)) - MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId())))
+                    .replacement("{status}", arena.getStatus().name())
+                    .replacement("{on}", String.valueOf(arena.getPlayers().size()))
+                    .replacement("{max}", String.valueOf(arena.getMaxPlayers()))
                     .event(event -> {
                         switch (path) {
                             case "map":
@@ -181,9 +181,9 @@ public class ArenasMenu extends PaginatedMenuBuilder {
             if (key.startsWith("map") || key.contains("page")) continue;
 
             items.add(ItemBuilder.parse("map-selector.menus.maps-menu.items." + key, CONFIG)
-                    .addReplacement("{groupName}", displayGroup)
-                    .addReplacement("{selectionsType}", Utils.getSelectionsType(player))
-                    .addReplacement("{remainingUses}", unlimited ? MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Utils.getSelectionsType(player)) - MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId())))
+                    .replacement("{groupName}", displayGroup)
+                    .replacement("{selectionsType}", Utils.getSelectionsType(player))
+                    .replacement("{remainingUses}", unlimited ? MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Utils.getSelectionsType(player)) - MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId())))
                     .event(event -> {
                         switch (key) {
                             case "random-map":
@@ -221,12 +221,12 @@ public class ArenasMenu extends PaginatedMenuBuilder {
     @Override
     public ItemBuilder getNextPageItem() {
         return ItemBuilder.parse("map-selector.menus.maps-menu.items.next-page", CONFIG)
-                .addReplacement("{nextPage}", String.valueOf(getPage() + 1));
+                .replacement("{nextPage}", String.valueOf(getPage() + 1));
     }
 
     @Override
     public ItemBuilder getPreviousPageItem() {
         return ItemBuilder.parse("map-selector.menus.maps-menu.items.previous-page", CONFIG)
-                .addReplacement("{previousPage}", String.valueOf(getPage() - 1));
+                .replacement("{previousPage}", String.valueOf(getPage() - 1));
     }
 }

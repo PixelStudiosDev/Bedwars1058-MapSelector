@@ -11,9 +11,11 @@ import me.leoo.bedwars.mapselector.hook.PlaceholderAPI;
 import me.leoo.bedwars.mapselector.listeners.JoinListener;
 import me.leoo.bedwars.mapselector.utils.BedwarsMode;
 import me.leoo.utils.bukkit.Utils;
+import me.leoo.utils.bukkit.bukkit.BukkitUpdateCheck;
 import me.leoo.utils.bukkit.commands.CommandManager;
 import me.leoo.utils.bukkit.config.ConfigManager;
 import me.leoo.utils.bukkit.events.Events;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static org.bukkit.Bukkit.getPluginManager;
@@ -40,6 +42,9 @@ public class MapSelector extends JavaPlugin {
         mainConfig = new MainConfig("config", bedwarsMode.getPath());
         cacheConfig = new CacheConfig("cache", bedwarsMode.getPath());
 
+        mainConfig.reload();
+        cacheConfig.reload();
+
         databaseManager = new DatabaseManager(mainConfig, bedwarsMode);
 
         if (getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -48,6 +53,16 @@ public class MapSelector extends JavaPlugin {
 
         Events.register(new JoinListener());
         CommandManager.register(new FirstGuiCommand(), new SecondGuiCommand(), new MainCommand());
+
+
+        // Update Checker
+        if (mainConfig.getBoolean("map-selector.update-checker")) {
+            new BukkitUpdateCheck(String.valueOf(105289), BukkitUpdateCheck.Source.SPIGOT).init();
+        }
+
+        // Metrics
+        new Metrics(this, 23388);
+
 
         getLogger().info(getDescription().getName() + " plugin by itz_leoo has been successfully enabled.");
     }

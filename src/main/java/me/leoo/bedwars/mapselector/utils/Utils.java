@@ -34,7 +34,7 @@ public class Utils {
     }
 
     public void joinRandomGroup(Player player, String group, boolean unlimited, boolean favorite) {
-        if (MapSelector.get().getBedwarsMode().equals(BedwarsMode.PROXY)) {
+        if (MapSelector.get().getBedwarsMode() == BedwarsMode.PROXY) {
             List<CachedArena> arenas = new ArrayList<>();
             List<CachedArena> arenas1;
 
