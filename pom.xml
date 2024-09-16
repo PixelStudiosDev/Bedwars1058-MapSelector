@@ -6,7 +6,7 @@
 
     <groupId>me.leoo.bedwars</groupId>
     <artifactId>Bedwars1058-MapSelector</artifactId>
-    <version>1.4.6</version>
+    <version>1.4.7</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -70,7 +70,13 @@
         <dependency>
             <groupId>me.leoo.utils</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.10.0</version>
+            <version>1.13.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.0.2</version>
         </dependency>
     </dependencies>
 
@@ -109,6 +115,10 @@
                         <relocation>
                             <pattern>me.leoo.utils</pattern>
                             <shadedPattern>me.leoo.bedwars.mapselector.libs.utils</shadedPattern>ù
+                        </relocation>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>me.leoo.bedwars.mapselector.libs.bstats</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
