@@ -6,7 +6,7 @@
 
     <groupId>me.leoo.bedwars</groupId>
     <artifactId>Bedwars1058-MapSelector</artifactId>
-    <version>1.4.7</version>
+    <version>1.4.8</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
