@@ -11,6 +11,7 @@ import com.andrei1058.bedwars.proxy.arenamanager.ArenaManager;
 import lombok.experimental.UtilityClass;
 import me.leoo.bedwars.mapselector.MapSelector;
 import me.leoo.bedwars.mapselector.database.Yaml;
+import me.leoo.utils.bukkit.config.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -19,18 +20,28 @@ import java.util.*;
 @UtilityClass
 public class Utils {
 
+    private static final ConfigManager CONFIG = MapSelector.get().getMainConfig();
+
     public String getSelectionsType(Player player) {
-        for (String s : MapSelector.get().getMainConfig().getYml().getConfigurationSection("map-selector.selections.selections").getKeys(false)) {
-            if (player.hasPermission(MapSelector.get().getMainConfig().getString("map-selector.selections.selections." + s + ".permission"))) {
-                if (MapSelector.get().getMainConfig().getBoolean("map-selector.selections.selections." + s + ".unlimited")) {
-                    return MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message");
+        int uses = 0;
+
+        for (String s : CONFIG.getKeys("map-selector.selections.selections")) {
+            String path = "map-selector.selections.selections." + s + ".";
+
+            if (player.hasPermission(CONFIG.getString(path + "permission"))) {
+                if (CONFIG.getBoolean(path + "unlimited")) {
+                    return CONFIG.getString("map-selector.selections.unlimited-message");
                 } else {
-                    return String.valueOf(MapSelector.get().getMainConfig().getInt("map-selector.selections.selections." + s + ".daily-uses"));
+                    int value = CONFIG.getInt(path + "daily-uses");
+
+                    if (value > uses) {
+                        uses = value;
+                    }
                 }
             }
         }
 
-        return "0";
+        return String.valueOf(uses);
     }
 
     public void joinRandomGroup(Player player, String group, boolean unlimited, boolean favorite) {
@@ -42,10 +53,10 @@ public class Utils {
 
             if (favorite) {
                 arenas1 = new ArrayList<>(Yaml.getFavoritesBungee(player, group));
-                noMapsMessage = MapSelector.get().getMainConfig().getString("map-selector.messages.no-favorites-maps");
+                noMapsMessage = CONFIG.getString("map-selector.messages.no-favorites-maps");
             } else {
                 arenas1 = new ArrayList<>(ArenaManager.getArenas());
-                noMapsMessage = MapSelector.get().getMainConfig().getString("map-selector.messages.no-maps");
+                noMapsMessage = CONFIG.getString("map-selector.messages.no-maps");
             }
 
             for (CachedArena cachedArena : arenas1) {
@@ -72,10 +83,10 @@ public class Utils {
 
             if (favorite) {
                 arenas1 = new ArrayList<>(Yaml.getFavorites(player, group));
-                noMapsMessage = MapSelector.get().getMainConfig().getString("map-selector.messages.no-favorites-maps");
+                noMapsMessage = CONFIG.getString("map-selector.messages.no-favorites-maps");
             } else {
                 arenas1 = new ArrayList<>(Arena.getArenas());
-                noMapsMessage = MapSelector.get().getMainConfig().getString("map-selector.messages.no-maps");
+                noMapsMessage = CONFIG.getString("map-selector.messages.no-maps");
             }
 
             for (IArena iArena : arenas1) {
@@ -111,13 +122,13 @@ public class Utils {
             }
 
             if (arenas.isEmpty()) {
-                player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.no-maps"));
+                player.sendMessage(CONFIG.getString("map-selector.messages.no-maps"));
                 return;
             }
 
             if (BedWarsProxy.getParty().hasParty(player.getUniqueId()) && BedWarsProxy.getParty().getMembers(player.getUniqueId()).size() > 1) {
                 if (!BedWarsProxy.getParty().isOwner(player.getUniqueId())) {
-                    player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.not-party-leader"));
+                    player.sendMessage(CONFIG.getString("map-selector.messages.not-party-leader"));
                     return;
                 }
                 for (UUID uuid : BedWarsProxy.getParty().getMembers(player.getUniqueId())) {
@@ -140,13 +151,13 @@ public class Utils {
             }
 
             if (arenas.isEmpty()) {
-                player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.no-maps"));
+                player.sendMessage(CONFIG.getString("map-selector.messages.no-maps"));
                 return;
             }
 
             if (BedWars.getParty().hasParty(player) && BedWars.getParty().getMembers(player).size() > 1) {
                 if (!BedWars.getParty().isOwner(player)) {
-                    player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.not-party-leader"));
+                    player.sendMessage(CONFIG.getString("map-selector.messages.not-party-leader"));
                     return;
                 }
                 for (Player player1 : BedWars.getParty().getMembers(player)) {
@@ -166,9 +177,9 @@ public class Utils {
 
     public void checkDate() {
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        if (day != MapSelector.get().getMainConfig().getInt("map-selector.last-date")) {
+        if (day != CONFIG.getInt("map-selector.last-date")) {
             MapSelector.get().getDatabaseManager().setAllPlayersUses(0);
-            MapSelector.get().getMainConfig().set("map-selector.last-date", day);
+            CONFIG.set("map-selector.last-date", day);
         }
     }
 }
