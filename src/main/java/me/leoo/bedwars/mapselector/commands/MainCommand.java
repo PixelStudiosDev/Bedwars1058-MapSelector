@@ -3,6 +3,7 @@ package me.leoo.bedwars.mapselector.commands;
 import me.leoo.bedwars.mapselector.MapSelector;
 import me.leoo.utils.bukkit.commands.Command;
 import me.leoo.utils.bukkit.commands.CommandBuilder;
+import me.leoo.utils.bukkit.config.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -11,6 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainCommand extends Command {
+
+    private static final ConfigManager CONFIG = MapSelector.get().getMainConfig();
 
     public MainCommand() {
         super("bedwarsselector");
@@ -24,10 +27,10 @@ public class MainCommand extends Command {
                         case 1:
                             if (args[0].equalsIgnoreCase("reload")) {
                                 if (player.hasPermission("bwselector.reload")) {
-                                    MapSelector.get().getMainConfig().reload();
+                                    CONFIG.reload();
                                     MapSelector.get().getCacheConfig().reload();
 
-                                    player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.reload.success"));
+                                    player.sendMessage(CONFIG.getString("map-selector.messages.reload.success"));
                                 }
                             }
                             break;
@@ -36,14 +39,14 @@ public class MainCommand extends Command {
                                 if (player.hasPermission("bwselector.reset")) {
                                     Player target = Bukkit.getPlayerExact(args[1]);
                                     if (target == null) {
-                                        player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.reset-uses.not-found"));
+                                        player.sendMessage(CONFIG.getString("map-selector.messages.reset-uses.not-found"));
                                     } else {
                                         MapSelector.get().getDatabaseManager().setPlayerUses(target.getUniqueId(), 0);
-                                        player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.reset-uses.success").replace("{player}", target.getName()));
+                                        player.sendMessage(CONFIG.getString("map-selector.messages.reset-uses.success").replace("{player}", target.getName()));
                                     }
                                 }
                             } else {
-                                player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.reset-uses.missing"));
+                                player.sendMessage(CONFIG.getString("map-selector.messages.reset-uses.missing"));
                             }
                             break;
                         case 3:
@@ -51,7 +54,7 @@ public class MainCommand extends Command {
                                 if (player.hasPermission("bwselector.set")) {
                                     Player target = Bukkit.getPlayerExact(args[1]);
                                     if (target == null) {
-                                        player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.set-uses.not-found"));
+                                        player.sendMessage(CONFIG.getString("map-selector.messages.set-uses.not-found"));
                                     } else {
                                         int uses = 0;
                                         try {
@@ -61,13 +64,13 @@ public class MainCommand extends Command {
                                         }
 
                                         MapSelector.get().getDatabaseManager().setPlayerUses(target.getUniqueId(), uses);
-                                        player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.set-uses.success")
+                                        player.sendMessage(CONFIG.getString("map-selector.messages.set-uses.success")
                                                 .replace("{player}", target.getName())
                                                 .replace("{uses}", String.valueOf(uses)));
                                     }
                                 }
                             } else {
-                                player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.set-uses.missing"));
+                                player.sendMessage(CONFIG.getString("map-selector.messages.set-uses.missing"));
                             }
                             break;
                     }

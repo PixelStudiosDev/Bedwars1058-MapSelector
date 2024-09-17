@@ -10,12 +10,15 @@ import me.leoo.bedwars.mapselector.menu.proxy.ArenasMenuProxy;
 import me.leoo.bedwars.mapselector.utils.BedwarsMode;
 import me.leoo.utils.bukkit.commands.Command;
 import me.leoo.utils.bukkit.commands.CommandBuilder;
+import me.leoo.utils.bukkit.config.ConfigManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class SecondGuiCommand extends Command {
+
+    private static final ConfigManager CONFIG = MapSelector.get().getMainConfig();
 
     public SecondGuiCommand() {
         super("bedwarsmap");
@@ -27,7 +30,7 @@ public class SecondGuiCommand extends Command {
                     List<String> groups = new ArrayList<>();
 
                     if (args.length != 1) {
-                        player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.open.missing2"));
+                        player.sendMessage(CONFIG.getString("map-selector.messages.open.missing2"));
                         return;
                     }
 
@@ -43,7 +46,7 @@ public class SecondGuiCommand extends Command {
 
                         for (String group1 : group.split(",")) {
                             if (!groups.contains(group1)) {
-                                player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.open.group-doesnt-exists"));
+                                player.sendMessage(CONFIG.getString("map-selector.messages.open.group-doesnt-exists"));
                                 return;
                             }
                         }
@@ -59,7 +62,7 @@ public class SecondGuiCommand extends Command {
 
                         for (String group1 : group.split(",")) {
                             if (!groups.contains(group1)) {
-                                player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.open.group-doesnt-exists"));
+                                player.sendMessage(CONFIG.getString("map-selector.messages.open.group-doesnt-exists"));
                                 return;
                             }
                         }

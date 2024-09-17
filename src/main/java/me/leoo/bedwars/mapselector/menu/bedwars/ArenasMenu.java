@@ -43,7 +43,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
     private static final ConfigManager CONFIG = MapSelector.get().getMainConfig();
 
     public ArenasMenu(Player player, String group) {
-        super(player, MapSelector.get().getMainConfig().getInt("map-selector.menus.maps-menu.slots") / 9);
+        super(player, CONFIG.getInt("map-selector.menus.maps-menu.slots") / 9);
 
         this.group = group;
     }
@@ -76,7 +76,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
             }
         }
         if (arenas.isEmpty()) {
-            player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.no-maps"));
+            player.sendMessage(CONFIG.getString("map-selector.messages.no-maps"));
             return items;
         }
 
@@ -87,7 +87,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
 
         arenas.sort(Comparator.comparing(IArena::getDisplayName));
 
-        boolean unlimited = Utils.getSelectionsType(player).equals(MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message"));
+        boolean unlimited = Utils.getSelectionsType(player).equals(CONFIG.getString("map-selector.selections.unlimited-message"));
 
         //items
         for (IArena arena : arenas) {
@@ -100,7 +100,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
                     path = "map";
                 }
             } else {
-                if (player.hasPermission(MapSelector.get().getMainConfig().getString("map-selector.selections.permission"))
+                if (player.hasPermission(CONFIG.getString("map-selector.selections.permission"))
                         && MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId()) < Integer.parseInt(Utils.getSelectionsType(player))) {
                     if (Yaml.isFavorite(player, arena.getArenaName())) {
                         path = "map-favorite";
@@ -118,7 +118,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
                     .replacement("{availableGames}", "1")
                     .replacement("{timesJoined}", String.valueOf(Yaml.getMapJoins(player, arena.getArenaName())))
                     .replacement("{selectionsType}", Utils.getSelectionsType(player))
-                    .replacement("{remainingUses}", unlimited ? MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Utils.getSelectionsType(player)) - MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId())))
+                    .replacement("{remainingUses}", unlimited ? CONFIG.getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Utils.getSelectionsType(player)) - MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId())))
                     .replacement("{status}", arena.getStatus().name())
                     .replacement("{on}", String.valueOf(arena.getPlayers().size()))
                     .replacement("{max}", String.valueOf(arena.getMaxPlayers()))
@@ -135,7 +135,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
 
                                     update();
                                 } else {
-                                    if (Utils.getSelectionsType(player).equals(MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message"))) {
+                                    if (Utils.getSelectionsType(player).equals(CONFIG.getString("map-selector.selections.unlimited-message"))) {
                                         Utils.joinArena(player, arena.getArenaName(), arena.getGroup(), true);
 
                                         player.closeInventory();
@@ -146,7 +146,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
                                             player.closeInventory();
                                         } else {
                                             player.closeInventory();
-                                            player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.limit-reached"));
+                                            player.sendMessage(CONFIG.getString("map-selector.messages.limit-reached"));
                                         }
                                     }
                                 }
@@ -154,7 +154,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
                                 break;
                             case "map-no-permissions-no-uses":
                                 player.closeInventory();
-                                player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.limit-reached"));
+                                player.sendMessage(CONFIG.getString("map-selector.messages.limit-reached"));
 
                                 break;
                         }
@@ -175,7 +175,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
         }
 
         //other
-        boolean unlimited = Utils.getSelectionsType(player).equals(MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message"));
+        boolean unlimited = Utils.getSelectionsType(player).equals(CONFIG.getString("map-selector.selections.unlimited-message"));
 
         for (String key : CONFIG.getKeys("map-selector.menus.maps-menu.items")) {
             if (key.startsWith("map") || key.contains("page")) continue;
@@ -183,7 +183,7 @@ public class ArenasMenu extends PaginatedMenuBuilder {
             items.add(ItemBuilder.parse("map-selector.menus.maps-menu.items." + key, CONFIG)
                     .replacement("{groupName}", displayGroup)
                     .replacement("{selectionsType}", Utils.getSelectionsType(player))
-                    .replacement("{remainingUses}", unlimited ? MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Utils.getSelectionsType(player)) - MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId())))
+                    .replacement("{remainingUses}", unlimited ? CONFIG.getString("map-selector.selections.unlimited-message") : String.valueOf(Integer.parseInt(Utils.getSelectionsType(player)) - MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId())))
                     .event(event -> {
                         switch (key) {
                             case "random-map":
@@ -191,13 +191,13 @@ public class ArenasMenu extends PaginatedMenuBuilder {
 
                                 break;
                             case "random-favourite":
-                                if (Utils.getSelectionsType(player).equals(MapSelector.get().getMainConfig().getString("map-selector.selections.unlimited-message"))) {
+                                if (Utils.getSelectionsType(player).equals(CONFIG.getString("map-selector.selections.unlimited-message"))) {
                                     Utils.joinRandomGroup(player, group, true, false);
                                 } else {
                                     if (MapSelector.get().getDatabaseManager().getPlayerUses(player.getUniqueId()) < Integer.parseInt(Utils.getSelectionsType(player))) {
                                         Utils.joinRandomGroup(player, group, false, false);
                                     } else {
-                                        player.sendMessage(MapSelector.get().getMainConfig().getString("map-selector.messages.limit-reached"));
+                                        player.sendMessage(CONFIG.getString("map-selector.messages.limit-reached"));
                                     }
                                 }
 

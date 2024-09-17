@@ -36,7 +36,7 @@ public class SelectorMenuProxy extends MenuBuilder {
     private final String group;
 
     public SelectorMenuProxy(Player player, String group) {
-        super(player, MapSelector.get().getMainConfig().getInt("map-selector.menus.bedwars-menu.slots") / 9);
+        super(player, CONFIG.getInt("map-selector.menus.bedwars-menu.slots") / 9);
 
         this.group = group;
     }
