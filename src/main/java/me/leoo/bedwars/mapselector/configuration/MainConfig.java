@@ -105,9 +105,11 @@ public class MainConfig extends ConfigManager {
                 "&7Each day you can choose which", "&7map you want to play 1 time.", "&7Unlock unlimited map selection!", "&7by upgrading to &bMVP&c+ &7rank", "&7on our store!", "", "&ehttps://store.myserver.net!");
 
         //selections settings
-        addSelectionsType("default", "bwselector.default", 3, false);
-        addSelectionsType("mvp+", "bwselector.mvp+", 0, true);
-        addSelectionsType("admin", "bwselector.admin", 0, true);
+        if (isFirstTime()) {
+            addSelectionsType("default", "bwselector.default", 3, false);
+            addSelectionsType("mvp+", "bwselector.mvp+", 0, true);
+            addSelectionsType("admin", "bwselector.admin", 0, true);
+        }
 
         yml.options().copyDefaults(true);
         save();
