@@ -6,7 +6,7 @@
 
     <groupId>me.leoo.bedwars</groupId>
     <artifactId>Bedwars1058-MapSelector</artifactId>
-    <version>1.4.8</version>
+    <version>1.5.0</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>me.leoo.utils</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.13.1</version>
+            <version>1.20.0</version>
         </dependency>
 
         <dependency>
