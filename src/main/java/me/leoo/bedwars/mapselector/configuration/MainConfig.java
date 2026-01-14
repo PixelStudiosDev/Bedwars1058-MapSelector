@@ -58,54 +58,58 @@ public class MainConfig extends ConfigManager {
         add("map-selector.menus.maps-menu.maps-slots", "10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34");
 
         //first gui items
-        addFirstGuiItem("join-random", 12, XMaterial.RED_BED,
-                "&aBed Wars ({groupName})",
-                "&7Play a game of Bed Wars {groupName}.", "", "&eClick to play!");
-        addFirstGuiItem("map-selector", 14, XMaterial.OAK_SIGN,
-                "&aMap Selector ({groupName})",
-                "&7Pick which map you want to play", "&7from a list of available games.", "", "&eClick to browse!");
-        addFirstGuiItem("close", 31, XMaterial.BARRIER,
-                "&cClose");
-        addFirstGuiItem("rejoin", 35, XMaterial.ENDER_PEARL,
-                "&cClick here to rejoin!",
-                "&7Click here to rejoin your game", "&7if you have been disconnected", "&7from it.");
+        if (toSave("map-selector.menus.bedwars-menu.items")) {
+            addFirstGuiItem("join-random", 12, XMaterial.RED_BED,
+                    "&aBed Wars ({groupName})",
+                    "&7Play a game of Bed Wars {groupName}.", "", "&eClick to play!");
+            addFirstGuiItem("map-selector", 14, XMaterial.OAK_SIGN,
+                    "&aMap Selector ({groupName})",
+                    "&7Pick which map you want to play", "&7from a list of available games.", "", "&eClick to browse!");
+            addFirstGuiItem("close", 31, XMaterial.BARRIER,
+                    "&cClose");
+            addFirstGuiItem("rejoin", 35, XMaterial.ENDER_PEARL,
+                    "&cClick here to rejoin!",
+                    "&7Click here to rejoin your game", "&7if you have been disconnected", "&7from it.");
+
+            addFirstGuiItem("practice", 27, XMaterial.RED_BED,
+                    "&aPractice",
+                    "&7Improve your gameplay by", "&7practicing different aspects of", "&7Bed Wars!", "", "&eClick to view modes!");
+        }
 
         //second gui items
-        addSecondGuiItem("map", 0, XMaterial.PAPER,
-                "&a{mapName}",
-                "&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!");
-        addSecondGuiItem("map-favorite", 0, XMaterial.MAP,
-                "&b✫ &a{mapName}",
-                "&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!");
-        addSecondGuiItem("map-no-permissions-no-uses", 0, XMaterial.GUNPOWDER,
-                "&a{mapName}",
-                "&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&c✘ You don't have the required rank(s)", "&cor you have reached", "&cthe daily map selections limit!");
+        if (toSave("map-selector.menus.maps-menu.items")) {
+            addSecondGuiItem("map", 0, XMaterial.PAPER,
+                    "&a{mapName}",
+                    "&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!");
+            addSecondGuiItem("map-favorite", 0, XMaterial.MAP,
+                    "&b✫ &a{mapName}",
+                    "&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&a▸ Click to Play", "&eRight click to toggle favorite!");
+            addSecondGuiItem("map-no-permissions-no-uses", 0, XMaterial.GUNPOWDER,
+                    "&a{mapName}",
+                    "&8{groupName}", "", "&7Available Games: &a{availableGames}", "&7Times Joined: &a{timesJoined}", "&7Map Selections: &a{selectionsType}", "", "&c✘ You don't have the required rank(s)", "&cor you have reached", "&cthe daily map selections limit!");
 
-        addSecondGuiItem("random-map", 39, XMaterial.FIREWORK_ROCKET,
-                "&aRandom Map",
-                "&8{groupName}", "", "&7Map selections: &a{selectionsType}", "", "&a▸ Click to Play");
-        addSecondGuiItem("random-favourite", 41, XMaterial.DIAMOND,
-                "&aRandom Favourite",
-                "&8{groupName}", "", "&7Map selections: &a{selectionsType}", "", "&a▸ Click to Play");
-        addSecondGuiItem("back", 49, XMaterial.ARROW,
-                "&aBack");
-        addSecondGuiItem("next-page", 26, XMaterial.ARROW,
-                "&aNext Page",
-                "&ePage {nextPage}");
-        addSecondGuiItem("previous-page", 18, XMaterial.ARROW,
-                "&aPrevious Page",
-                "&ePage {previousPage}");
+            addSecondGuiItem("random-map", 39, XMaterial.FIREWORK_ROCKET,
+                    "&aRandom Map",
+                    "&8{groupName}", "", "&7Map selections: &a{selectionsType}", "", "&a▸ Click to Play");
+            addSecondGuiItem("random-favourite", 41, XMaterial.DIAMOND,
+                    "&aRandom Favourite",
+                    "&8{groupName}", "", "&7Map selections: &a{selectionsType}", "", "&a▸ Click to Play");
+            addSecondGuiItem("back", 49, XMaterial.ARROW,
+                    "&aBack");
+            addSecondGuiItem("next-page", 26, XMaterial.ARROW,
+                    "&aNext Page",
+                    "&ePage {nextPage}");
+            addSecondGuiItem("previous-page", 18, XMaterial.ARROW,
+                    "&aPrevious Page",
+                    "&ePage {previousPage}");
 
-        //extra items
-        addFirstGuiItem("practice", 27, XMaterial.RED_BED,
-                "&aPractice",
-                "&7Improve your gameplay by", "&7practicing different aspects of", "&7Bed Wars!", "", "&eClick to view modes!");
-        addSecondGuiItem("book", 53, XMaterial.BOOK,
-                "&aMap Selection",
-                "&7Each day you can choose which", "&7map you want to play 1 time.", "&7Unlock unlimited map selection!", "&7by upgrading to &bMVP&c+ &7rank", "&7on our store!", "", "&ehttps://store.myserver.net!");
+            addSecondGuiItem("book", 53, XMaterial.BOOK,
+                    "&aMap Selection",
+                    "&7Each day you can choose which", "&7map you want to play 1 time.", "&7Unlock unlimited map selection!", "&7by upgrading to &bMVP&c+ &7rank", "&7on our store!", "", "&ehttps://store.myserver.net!");
+        }
 
         //selections settings
-        if (isFirstTime()) {
+        if (toSave("map-selector.selections.selections")) {
             addSelectionsType("default", "bwselector.default", 3, false);
             addSelectionsType("mvp+", "bwselector.mvp+", 0, true);
             addSelectionsType("admin", "bwselector.admin", 0, true);
