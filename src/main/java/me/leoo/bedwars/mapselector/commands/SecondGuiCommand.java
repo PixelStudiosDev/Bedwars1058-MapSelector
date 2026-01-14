@@ -24,7 +24,7 @@ public class SecondGuiCommand extends Command {
         super("bedwarsmap");
 
         setMainCommand(new CommandBuilder("bedwarsmap")
-                .setAliases("bwmap")
+                .setAliases(new String[]{"bwmap"})
                 .setPlayersOnly(true)
                 .setPlayerExecutor((player, args) -> {
                     List<String> groups = new ArrayList<>();

@@ -21,7 +21,7 @@ public class FirstGuiCommand extends Command {
         super("bedwarsmenu");
 
         setMainCommand(new CommandBuilder("bedwarsmenu")
-                .setAliases("bwmenu")
+                .setAliases(new String[]{"bwmenu"})
                 .setPlayersOnly(true)
                 .setPlayerExecutor((player, args) -> {
                     if (args.length != 1) {

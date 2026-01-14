@@ -19,7 +19,7 @@ public class MainCommand extends Command {
         super("bedwarsselector");
 
         setMainCommand(new CommandBuilder("bedwarsselector")
-                .setAliases("bwselector")
+                .setAliases(new String[]{"bwselector"})
                 .setPlayersOnly(true)
                 .setOperatorsOnly(true)
                 .setPlayerExecutor((player, args) -> {
